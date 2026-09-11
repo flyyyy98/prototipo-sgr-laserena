@@ -5,3 +5,10 @@ Thumbs.db
 node_modules/
 .vscode/
 .idea/
+.gradle/
+build/
+**/build/
+.kotlin/
+local.properties
+*.iml
+

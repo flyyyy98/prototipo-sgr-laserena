@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SGR La Serena">
+  <meta name="theme-color" content="#850000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="logo.png">
+  <title>Plataforma Territorial • Ilustre Municipalidad de La Serena</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            crimson: {
+              700: '#850000',
+              800: '#680000',
+              900: '#4A0000',
+              950: '#2E0000',
+            },
+            muni: {
+              navy: '#0B1120',
+              cardDark: '#070D1E',
+              gold: '#D97706',
+              goldLight: '#F59E0B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #F1F5F9;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .safe-area-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .glass-header {
+      background: linear-gradient(135deg, #4A0000 0%, #680000 50%, #850000 100%);
+      border-bottom: 2px solid rgba(217, 119, 6, 0.4);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+    }
+    .muni-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.25rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
+    }
+    .progress-gradient {
+      background: linear-gradient(90deg, #ef4444 0%, #f59e0b 40%, #10b981 70%, #059669 100%);
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+    }
+    .print-only {
+      display: none;
+    }
+    @media print {
+      #top-status-bar,
+      header,
+      .no-print,
+      button,
+      input,
+      select,
+      .modal-backdrop,
+      .tab-btn,
+      #btn-ingresar-requerimiento,
+      .kanban-actions {
+        display: none !important;
+      }
+      body {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 10pt !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .muni-card {
+        background: #ffffff !important;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 12pt !important;
+        border-radius: 8px !important;
+      }
+      main {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      footer {
+        background: #ffffff !important;
+        border-top: 1px solid #94a3b8 !important;
+        padding-top: 12pt !important;
+        margin-top: 16pt !important;
+      }
+      @page {
+        margin: 1.2cm;
+        size: letter portrait;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900">
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ENCABEZADO EXCLUSIVO PARA IMPRESIÓN OFICIAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="print-only mb-6 border-b-2 border-red-900 pb-3 text-center">
+    <h1 class="text-xl font-black text-red-900 uppercase tracking-wide">ILUSTRE MUNICIPALIDAD DE LA SERENA</h1>
+    <h2 class="text-xs font-bold text-slate-800">Sistema de Gestión y Seguimiento de Resultados (SGR) • Coordinación Territorial</h2>
+    <p class="text-[10px] text-slate-500 mt-0.5">Ficha de Desempeño Operativo y Compromisos Territoriales • 6 Delegaciones</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- TOP STATUS BAR INSTITUCIONAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="top-status-bar" class="no-print hidden md:flex bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 justify-between items-center border-b border-red-950/40 font-medium">
+    <div class="flex items-center gap-2">
+      <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+      <span id="live-datetime">Viernes, 11 de Septiembre de 2026 • 07:00:00 • La Serena • Chile</span>
+    </div>
+    <div class="flex items-center gap-2.5">
+      <!-- Botón Imprimir Ficha -->
+      <button onclick="window.print()" class="no-print flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded-full border border-slate-700 cursor-pointer transition shadow-xs">
+        <i data-lucide="printer" class="w-3 h-3 text-amber-400"></i>
+        <span>Imprimir Ficha</span>
+      </button>
+
+      <!-- Theme Button -->
+      <button class="flex items-center gap-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-0.5 rounded-md border border-slate-700 transition">
+        <i data-lucide="laptop" class="w-3 h-3 text-amber-400"></i>
+        <span>Auto</span>
+      </button>
+
+      <!-- Guía Button -->
+      <button onclick="openModal('modal-guia')" class="flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white bg-red-950/80 hover:bg-red-900 px-2.5 py-0.5 rounded-full border border-amber-500/40 shadow-xs cursor-pointer transition">
+        <i data-lucide="help-circle" class="w-3 h-3 text-amber-400"></i>
+        <span>¿Cómo funciona?</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- HEADER INSTITUCIONAL CARMESÍ -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <header class="glass-header text-white sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Delegaciones -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white rounded-xl shadow-md p-1 flex items-center justify-center border border-amber-400/60 overflow-hidden">
+          <img src="logo-laserena.png" alt="Escudo La Serena" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='screenshot_dashboard_kpi.png';">
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base sm:text-lg font-black tracking-tight text-white drop-shadow-xs">LA SERENA</span>
+            <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">6 DELEGACIONES</span>
+          </div>
+          <p class="text-[11px] text-red-100 font-medium tracking-wide">Ilustre Municipalidad • Coordinación Territorial</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Terreno / Coordinación / Alcaldía) -->
+      <nav class="hidden md:flex items-center gap-1.5 sm:gap-2 bg-red-950/50 p-1 rounded-2xl border border-red-800/40 backdrop-blur-xs">
+        <button id="tab-btn-terreno" onclick="switchTab('terreno')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900">
+          <i data-lucide="hard-hat" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Terreno</div>
+            <div class="text-[9px] font-normal opacity-80">Cuadrilla Operativa</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-tubo" onclick="switchTab('tubo')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="kanban" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Tubo de Trabajo</div>
+            <div class="text-[9px] font-normal opacity-80">Agenda 4 Estados</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-coordinacion" onclick="switchTab('coordinacion')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Coordinación</div>
+            <div class="text-[9px] font-normal opacity-80">Auditoría Check=1</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-alcaldia" onclick="switchTab('alcaldia')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="building-2" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Alcaldía</div>
+            <div class="text-[9px] font-normal opacity-80">Mando Estratégico</div>
+          </div>
+        </button>
+      </nav>
+
+      <!-- User Selector & Actions -->
+      <div class="flex items-center gap-2.5">
+        <!-- Badge Pending Checks (visible en Coordinacion o Terreno) -->
+        <div class="hidden md:flex items-center gap-1.5 bg-amber-400/90 text-slate-950 px-2.5 py-1 rounded-xl text-xs font-black shadow-xs">
+          <i data-lucide="bell" class="w-3.5 h-3.5 text-red-900"></i>
+          <span>1 Check por Validar</span>
+        </div>
+
+        <!-- Funcionario Selector -->
+        <div class="relative">
+          <button onclick="toggleFuncSelector()" class="flex items-center gap-2 bg-red-950/70 hover:bg-red-900/80 px-3 py-1.5 rounded-2xl border border-red-700/50 text-xs font-bold text-white transition">
+            <div class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs">R</div>
+            <div class="text-left leading-tight">
+              <div id="selected-func-name">Rodrigo Morales</div>
+              <div id="selected-func-del" class="text-[10px] text-amber-300 font-normal">La Pampa</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-red-300"></i>
+          </button>
+          
+          <div id="func-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white text-slate-900 rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cambiar Funcionario (Demo)</div>
+            <button onclick="selectFuncionario('Rodrigo Morales', 'La Pampa', 'DISERCO', '14.238.912-4', 120, 11, 66.7)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between font-semibold">
+              <span>Rodrigo Morales</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">La Pampa</span>
+            </button>
+            <button onclick="selectFuncionario('Camila Santander', 'Centro', 'Gestión Social (DIDECO)', '17.320.450-4', 60, 45, 35.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Camila Santander</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Centro</span>
+            </button>
+            <button onclick="selectFuncionario('Hernán Cortés', 'Las Compañías', 'Seguridad', '13.980.112-9', 55, 80, 42.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Hernán Cortés</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Las Compañías</span>
+            </button>
+            <button onclick="selectFuncionario('Patricia Valenzuela', 'La Antena', 'Organizaciones Comunitarias', '16.740.231-1', 40, 60, 28.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Patricia Valenzuela</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">La Antena</span>
+            </button>
+            <button onclick="selectFuncionario('Esteban Barraza', 'Rural', 'DISERCO', '18.210.998-3', 70, 95, 52.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Esteban Barraza</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Rural</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Acceso Oficial Button -->
+        <button onclick="openModal('modal-login')" class="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 px-3.5 py-2 rounded-2xl text-xs font-black shadow-md hover:scale-105 transition cursor-pointer">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          <span>Acceso Oficial</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MAIN CONTAINER -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 pb-24 md:pb-8">
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 1: PANEL TERRENO (CUADRILLA OPERATIVA) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-terreno" class="space-y-6">
+      
+      <!-- Grid Superior: Tarjeta Funcionario + Semáforo Gauge -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Tarjeta Cuadrilla Activa (Navy Blue Sólido) -->
+        <div class="lg:col-span-4 bg-[#070D1E] text-white p-6 rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide">CUADRILLA ACTIVA</span>
+              <span class="text-[11px] text-slate-400 font-mono" id="card-rut">RUT: 14.238.912-4</span>
+              <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full" id="card-area">DISERCO</span>
+            </div>
+
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 bg-amber-400/20 rounded-xl text-amber-400">
+                <i data-lucide="hard-hat" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-white leading-tight" id="card-name">Rodrigo Morales</h2>
+                <p class="text-xs text-amber-300 font-medium flex items-center gap-1 mt-0.5">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i>
+                  <span>Delegación Territorial: <b id="card-del">La Pampa</b></span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Stats Boxes -->
+            <div class="grid grid-cols-3 gap-2 mt-6">
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase">Meta Trimestral</div>
+                <div class="text-lg font-black text-white mt-0.5" id="card-meta">120</div>
+                <div class="text-[9px] text-slate-500">tickets fijados</div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-emerald-400 font-bold uppercase">Felicitaciones</div>
+                <div class="text-lg font-black text-emerald-400 mt-0.5">+1</div>
+                <div class="text-[9px] text-emerald-500/80">+10% bono</div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-rose-400 font-bold uppercase">Reclamos</div>
+                <div class="text-lg font-black text-rose-400 mt-0.5">-0</div>
+                <div class="text-[9px] text-rose-500/80">-0% pen.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Ingresar Requerimiento -->
+          <div class="mt-8 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+            <span class="text-xs text-slate-400">¿Nuevo requerimiento vecinal?</span>
+            <button onclick="openModal('modal-nuevo-ticket')" class="flex items-center gap-1.5 bg-gradient-to-r from-red-800 to-red-700 hover:from-red-700 hover:to-red-600 text-white text-xs font-black px-4 py-2.5 rounded-2xl shadow-lg hover:scale-105 transition cursor-pointer border border-red-600/50">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-amber-400"></i>
+              <span>Ingresar Requerimiento</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Semáforo Gauge Proporcional (Muni Card Blanca) -->
+        <div class="lg:col-span-8 muni-card p-6 flex flex-col justify-between">
+          <div>
+            <!-- Header Semáforo -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1 bg-red-50 text-red-900 border border-red-200 px-3 py-1 rounded-full text-xs font-extrabold uppercase">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+                  <span>MEDIDOR DE RENDIMIENTO PROPORCIONAL</span>
+                </span>
+                <span class="text-xs text-slate-500 font-semibold">Día 35 de 63 Hábiles</span>
+              </div>
+
+              <div id="gauge-alert-badge" class="flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black">
+                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                <span>ALERTA DE RENDIMIENTO (&lt;60%)</span>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-black text-slate-900 tracking-tight mb-4">Semáforo de Cumplimiento Trimestral</h3>
+
+            <!-- Rendimiento Calculado al Día -->
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 mb-5">
+              <div class="flex flex-wrap items-end justify-between gap-4 mb-3">
+                <div>
+                  <div class="text-xs font-bold text-slate-500 uppercase tracking-wide">RENDIMIENTO CALCULADO AL DÍA</div>
+                  <div class="flex items-baseline gap-2 mt-1">
+                    <span class="text-4xl font-black text-slate-900" id="gauge-pct">11%</span>
+                    <span class="text-xs font-semibold text-slate-500">Avance real acumulado</span>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <div class="text-xs font-bold text-slate-500">Meta Proporcional Esperada Hoy:</div>
+                  <div class="text-2xl font-black text-red-700" id="gauge-esperada">66.7 tickets</div>
+                </div>
+              </div>
+
+              <!-- Multi-Stop Gradient Progress Bar (Barra Adaptativa Oficial) -->
+              <div class="relative pt-6 pb-2">
+                <!-- Pin Indicator -->
+                <div class="absolute top-0 left-[7.3%] -translate-x-1/2 flex flex-col items-center pointer-events-none transition-all duration-500 z-20" id="gauge-pin">
+                  <span class="bg-red-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md">11%</span>
+                  <div class="w-0.5 h-2 bg-red-800"></div>
+                </div>
+
+                <!-- Track Bar con Pista de Fondo Adaptativa -->
+                <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden p-0.5 relative shadow-inner border border-slate-300">
+                  <div class="absolute inset-0 opacity-20 bg-gradient-to-r from-red-500 via-amber-500 via-emerald-500 to-teal-500 rounded-full pointer-events-none"></div>
+                  <div class="h-full rounded-full progress-gradient w-[7.3%] transition-all duration-500 relative z-10 shadow-xs" id="gauge-bar"></div>
+                </div>
+
+                <!-- Labels debajo de la barra -->
+                <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2">
+                  <span>0% <span class="font-normal text-[10px] text-slate-400 block">Inicio</span></span>
+                  <span class="text-amber-600">60% <span class="font-normal text-[10px] text-slate-400 block">Mínimo</span></span>
+                  <span class="text-emerald-700 flex items-center gap-0.5"><i data-lucide="star" class="w-2.5 h-2.5 fill-emerald-600"></i> 100% <span class="font-normal text-[10px] text-slate-400 block">Meta Oficial</span></span>
+                  <span class="text-slate-700">150% <span class="font-normal text-[10px] text-slate-400 block">Tope Máx</span></span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-600">
+                <div id="desglose-formula">
+                  Base: <b id="calc-base">1%</b> • Bono Vecinal: <b class="text-emerald-700">+10%</b> • Penalización: <b class="text-rose-700">-0%</b>
+                </div>
+                <div id="resultado-formula" class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-black text-slate-800">
+                  Resultado: 11% (Tope 150%)
+                </div>
+              </div>
+            </div>
+
+            <!-- ── BARRA ADAPTATIVA / SIMULADOR INTERACTIVO ── -->
+            <div class="mb-5 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onclick="toggleSimulador()"
+                  class="no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-2xs"
+                  id="btn-toggle-sim"
+                >
+                  <i data-lucide="sliders" class="w-3.5 h-3.5 text-red-800"></i>
+                  <span id="btn-toggle-sim-text">¿Deseas simular impacto de tareas? (Barra Adaptativa)</span>
+                  <i data-lucide="chevron-down" id="sim-arrow" class="w-3.5 h-3.5 text-slate-500 transition-transform"></i>
+                </button>
+
+                <button
+                  id="btn-reset-sim"
+                  type="button"
+                  onclick="resetSimulacion()"
+                  class="hidden text-[11px] text-red-700 hover:text-red-900 font-bold underline cursor-pointer"
+                >
+                  Restablecer a valores reales
+                </button>
+              </div>
+
+              <!-- Contenedor Desplegable de la Barra Adaptativa -->
+              <div id="simulador-container" class="hidden p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-slate-800 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-red-800"></i>
+                    Barra Adaptativa de Simulación en Terreno:
+                  </span>
+                  <span id="sim-badge" class="text-xs font-mono font-black text-red-800 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs">
+                    Sin simulación (+0 tareas)
+                  </span>
+                </div>
+
+                <!-- Input Range / Barra Deslizadora Adaptativa -->
+                <div class="relative pt-1 pb-1">
+                  <input
+                    type="range"
+                    id="slider-adaptativo"
+                    min="0"
+                    max="65"
+                    value="0"
+                    step="1"
+                    oninput="simularTareas(this.value)"
+                    class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-800 transition"
+                  >
+                </div>
+
+                <div class="flex justify-between text-[10px] text-slate-500 font-bold font-mono">
+                  <span>Hoy (+0)</span>
+                  <span>+15 tareas</span>
+                  <span>+35 tareas (Mínimo 60%)</span>
+                  <span>+65 tareas (Meta 100%)</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 4 Métricas Inferiores -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Validados</span>
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-900 mt-1" id="stat-validados">1 <span class="text-xs font-normal text-slate-500">/ 66.7 esp.</span></div>
+              <div class="text-[10px] text-slate-500">Tareas Aprobadas</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Días Hábiles</span>
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-900 mt-1">Día 35 <span class="text-xs font-normal text-slate-500">de 63</span></div>
+              <div class="text-[10px] text-slate-500">Base 65 - Deducibles</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Felicitaciones</span>
+                <i data-lucide="award" class="w-3.5 h-3.5 text-emerald-600"></i>
+              </div>
+              <div class="text-lg font-black text-emerald-700 mt-1">+10%</div>
+              <div class="text-[10px] text-slate-500">+10% por carta vecinal</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Reclamos</span>
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-700 mt-1">-0%</div>
+              <div class="text-[10px] text-slate-500">-20% por queja formal</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- TUBO DE TRABAJO (AGENDA COLECTIVA DE COMPROMISOS) -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <div id="section-tubo-trabajo" class="muni-card p-6 space-y-5">
+        
+        <!-- Encabezado del Tubo con Metas y Switcher de Vistas -->
+        <div class="flex flex-wrap items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+          <div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-red-900 text-amber-300 flex items-center justify-center shadow-xs">
+                <i data-lucide="kanban" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-lg font-black text-slate-900">Tubo de Trabajo (Agenda Colectiva)</h3>
+              <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full">4 compromisos activos</span>
+              
+              <!-- Badge Meta Colectiva 80% (RN-006) -->
+              <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-xs">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>Meta Colectiva: 83.3% (Exigencia ≥ 80% RN-006)</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-1 font-medium">Repositorio centralizado de compromisos vecinales en 4 estados transitables con alertas tempranas.</p>
+          </div>
+
+          <!-- Switcher Vista Lista vs Tablero Kanban -->
+          <div class="no-print flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200/80">
+            <button id="btn-tubo-lista" onclick="setTuboView('lista')" class="px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+              <i data-lucide="list" class="w-3.5 h-3.5"></i>
+              <span>Vista Lista</span>
+            </button>
+            <button id="btn-tubo-kanban" onclick="setTuboView('kanban')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>Tablero Kanban (4 Estados)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- VISTA LISTA DEL TUBO -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div id="tubo-view-lista" class="space-y-4">
+          <!-- Filtros y Búsqueda -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="relative no-print">
+              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" placeholder="Buscar RUT, vecino, código..." class="pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-red-800 focus:outline-none w-64">
+            </div>
+
+            <!-- Pill selector con los 4 estados de negocio -->
+            <div class="no-print flex flex-wrap items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+              <button class="px-3 py-1 bg-white text-slate-900 rounded-lg shadow-xs">Todos</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">1. Ingresado</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">2. Pendiente</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">3. En proceso</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">4. Realizado</button>
+            </div>
+          </div>
+
+          <!-- Lista de Tickets -->
+          <div class="space-y-3">
+            <!-- Ticket 1: Ingresado (Nuevo en agenda) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-slate-100 text-slate-700 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-slate-300">TUB-2026-042</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Rosa Morales</span>
+                  <span class="text-xs text-slate-400 font-mono">15.112.433-K</span>
+                  <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">Rural</span>
+                  <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> 1. Ingresado
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Instalación de luminaria pública y foco LED en pasaje El Romero por seguridad vecinal.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Pasaje El Romero s/n, Delegación Rural</span>
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 18-09-2026</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="moverTubo('TUB-2026-042', 'PENDIENTE')" class="text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">
+                  Pasar a Pendiente →
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 2: Pendiente con Alerta 3 Días (RN-005) -->
+            <div class="bg-white border-2 border-amber-300 rounded-2xl p-4 hover:border-amber-400 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-amber-50 text-amber-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-amber-300">TUB-2026-039</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Héctor Carvajal</span>
+                  <span class="text-xs text-slate-400 font-mono">11.450.892-1</span>
+                  <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">Rural</span>
+                  <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> 2. Pendiente
+                  </span>
+                  <!-- ALERTA PREVENTIVA A 3 DÍAS (RN-005) -->
+                  <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs animate-pulse">
+                    <i data-lucide="alert-triangle" class="w-3 h-3 text-slate-950"></i> Alerta: Vence en 3 días (RN-005)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Revisión y desobstrucción de fosa séptica comunitaria APR Lambert con camión limpiafosas.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Callejón Los Aromos s/n, Lambert</span>
+                  <span class="flex items-center gap-1 font-bold text-amber-800"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso Pactado: 14-09-2026 (Próximo a Vencer)</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="moverTubo('TUB-2026-039', 'PROCESO')" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-xl transition">
+                  Iniciar en Terreno →
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 3: En Proceso / En Espera de Validación -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Carlos Zepeda</span>
+                  <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
+                  <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                  <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span> 3. En Proceso
+                  </span>
+                  <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="hourglass" class="w-3 h-3"></i> En Espera de Validación
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Av. Cuatro Esquinas 850, La Pampa</span>
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 16-09-2026</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="openModal('modal-audit')" class="bg-red-900 hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>Ver Evidencias</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 4: Realizado / Check=1 Aprobado -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4 opacity-90">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-001</span>
+                  <span class="font-extrabold text-slate-900 text-sm">María González</span>
+                  <span class="text-xs text-slate-400 font-mono">12.345.678-9</span>
+                  <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                  <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> 4. Realizado & Check=1 Aprobado (+1 Logro)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Retiro de escombros y despeje de vereda tras faena de canalización.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Calle Los Perales 120, La Pampa</span>
+                  <span class="flex items-center gap-1 text-emerald-700 font-bold"><i data-lucide="shield-check" class="w-3 h-3"></i> Dictamen Supervisor: Conforme</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Certificado
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- VISTA TABLERO KANBAN (4 ESTADOS OFICIALES HDU-18) -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div id="tubo-view-kanban" class="hidden">
+          <div class="flex md:grid md:grid-cols-4 gap-3.5 sm:gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-none">
+            
+            <!-- Columna 1: 1. Ingresado -->
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
+                <span class="text-xs font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                  <span>1. Ingresado</span>
+                </span>
+                <span class="bg-white text-slate-800 text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">TUB-2026-042</span>
+                    <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-1.5 py-0.5 rounded">Rural</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Luminaria pasaje El Romero</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Vecina Rosa Morales solicita foco LED por seguridad.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>Plazo: 18-Sep</span>
+                    <button onclick="moverTubo('TUB-2026-042', 'PENDIENTE')" class="no-print text-[10px] bg-red-50 text-red-900 hover:bg-red-100 font-bold px-2 py-0.5 rounded transition">
+                      Avanzar →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: 2. Pendiente -->
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-amber-50/60 rounded-2xl p-4 border border-amber-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-amber-200">
+                <span class="text-xs font-black uppercase text-amber-800 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  <span>2. Pendiente</span>
+                </span>
+                <span class="bg-white text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full border border-amber-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border-2 border-amber-300 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">TUB-2026-039</span>
+                    <span class="text-[9px] bg-amber-500 text-slate-950 font-black px-1.5 py-0.5 rounded flex items-center gap-1">
+                      <i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i> Vence 3 días
+                    </span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Alcantarillado APR Lambert</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Coordinación camión limpiafosas con Dirección de Obras.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span class="text-amber-800 font-bold">14-Sep</span>
+                    <button onclick="moverTubo('TUB-2026-039', 'PROCESO')" class="no-print text-[10px] bg-amber-100 text-amber-900 hover:bg-amber-200 font-bold px-2 py-0.5 rounded transition">
+                      A Terreno →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 3: 3. En Proceso -->
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-rose-50/50 rounded-2xl p-4 border border-rose-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-rose-200">
+                <span class="text-xs font-black uppercase text-red-900 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                  <span>3. En Proceso</span>
+                </span>
+                <span class="bg-white text-red-900 text-xs font-bold px-2 py-0.5 rounded-full border border-rose-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">DIS-PAM-002</span>
+                    <span class="text-[10px] bg-rose-100 text-rose-800 font-bold px-1.5 py-0.5 rounded">La Pampa</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Poda de árbol con riesgo</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Cuadrilla ejecutando faena con motosierra y camión tolva.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>16-Sep</span>
+                    <button onclick="openModal('modal-audit')" class="no-print text-[10px] bg-red-900 text-white hover:bg-red-800 font-bold px-2 py-0.5 rounded transition">
+                      Evidencias →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 4: 4. Realizado -->
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-emerald-50/60 rounded-2xl p-4 border border-emerald-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200">
+                <span class="text-xs font-black uppercase text-emerald-800 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                  <span>4. Realizado</span>
+                </span>
+                <span class="bg-white text-emerald-900 text-xs font-bold px-2 py-0.5 rounded-full border border-emerald-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">DIS-PAM-001</span>
+                    <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">Check = 1</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Retiro de escombros</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Labor certificada por supervisor. Impacta +1 al semáforo.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-emerald-700 font-bold">
+                    <span>Certificado</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 2: PANEL COORDINACIÓN (AUDITORÍA CHECK=1) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-coordinacion" class="space-y-6 hidden">
+      
+      <!-- Banner Coordinación -->
+      <div class="muni-card p-6 flex flex-wrap items-center justify-between gap-4 bg-white">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-red-800 text-white flex items-center justify-center shadow-md">
+            <i data-lucide="globe-2" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-red-800 uppercase tracking-wide">COORDINACIÓN GENERAL COMUNAL (6 DELEGACIONES)</span>
+              <span class="text-xs text-slate-500">Supervisor Territorial</span>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Mesa de Dictamen & Supervisión General</h2>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs">
+            <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-600"></i>
+            <span>Cola de Validación (1)</span>
+          </button>
+          <button class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+            <span>Modificadores (5)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cola de Validación Fotográfica -->
+      <div class="muni-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900">Cola de Validación Fotográfica (1 pendientes)</h3>
+              <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Validación Pendiente</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Supervise y valide evidencias fotográficas de todas las delegaciones comunales.</p>
+          </div>
+
+          <div>
+            <select class="text-xs font-bold bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 focus:outline-none">
+              <option>Todas las Delegaciones (Comunal)</option>
+              <option>Centro</option>
+              <option>Rural</option>
+              <option>La Antena</option>
+              <option>La Pampa</option>
+              <option>Avenida del Mar</option>
+              <option>Las Compañías</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ticket a auditar -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1.5 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-red-50 text-red-900 text-xs font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
+              <span class="font-black text-slate-900 text-sm">Carlos Zepeda</span>
+              <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
+              <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">La Pampa</span>
+              <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+            </div>
+            <p class="text-xs text-slate-800 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
+            <div class="flex items-center gap-4 text-[11px] text-slate-500">
+              <span>Cuadrilla: <b>Rodrigo Morales</b></span>
+              <span>•</span>
+              <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Sector: Av. Cuatro Esquinas 850</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="openModal('modal-audit')" class="flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl transition cursor-pointer">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              <span>Ficha</span>
+            </button>
+            <button onclick="openModal('modal-audit')" class="flex items-center gap-1.5 bg-red-900 hover:bg-red-800 text-white text-xs font-black px-4 py-2 rounded-xl shadow-md transition cursor-pointer">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+              <span>Auditar Requerimiento</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 3: PANEL ALCALDÍA (MANDO ESTRATÉGICO 6 DELEGACIONES) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-alcaldia" class="space-y-6 hidden">
+      
+      <!-- Banner Alcaldía -->
+      <div class="muni-card p-6 flex flex-wrap items-center justify-between gap-4 bg-white">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-red-50 text-red-900 text-xs font-black px-2.5 py-0.5 rounded-md uppercase border border-red-200">ALCALDÍA • MANDO ESTRATÉGICO</span>
+            <span class="text-xs text-slate-500 font-semibold">• 6 Delegaciones</span>
+          </div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight mt-1">Tablero General de Gestión y Metas Comunales</h2>
+          <p class="text-xs text-slate-500 mt-1 max-w-3xl">Consolidado ejecutivo de respuesta vecinal, avance del ciclo trimestral de 65 días hábiles y supervisión territorial de La Serena.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+          <div class="bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-2xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-xl bg-rose-600 text-white font-black text-xs flex items-center justify-center">5%</span>
+            <div class="text-left leading-tight">
+              <div class="text-[11px] font-black text-rose-800">Alerta Crítica Comunal</div>
+              <div class="text-[9px] text-rose-600 uppercase font-bold">PROMEDIO COMUNAL</div>
+            </div>
+          </div>
+
+          <button onclick="window.print()" class="flex items-center gap-2 bg-red-950 hover:bg-red-900 text-white text-xs font-black px-4 py-2 rounded-2xl shadow-md transition cursor-pointer">
+            <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
+            <span>Imprimir Ficha Ejecutiva (1 Hoja)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Diagnóstico Situacional Banner -->
+      <div class="bg-rose-50/70 border border-rose-200/80 rounded-2xl p-4 flex items-center gap-3 text-xs text-rose-900 font-medium">
+        <i data-lucide="activity" class="w-5 h-5 text-rose-600 shrink-0"></i>
+        <span><b>Diagnóstico Situacional Comunal:</b> Existen 3 requerimiento(s) fuera del plazo de compromiso que requieren atención prioritaria de jefaturas territoriales.</span>
+      </div>
+
+      <!-- 4 KPIs Comunales -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">PROMEDIO COMUNAL</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">5%</div>
+            <div class="text-xs text-emerald-700 font-bold mt-0.5">Ponderación global</div>
+          </div>
+          <div class="p-3 bg-red-50 text-red-800 rounded-2xl">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">TICKETS VALIDADOS</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">2</div>
+            <div class="text-xs text-emerald-700 font-bold mt-0.5">Check = 1 Certificados</div>
+          </div>
+          <div class="p-3 bg-emerald-50 text-emerald-700 rounded-2xl">
+            <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">PENDIENTES EN TERRENO</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">3</div>
+            <div class="text-xs text-amber-700 font-bold mt-0.5">Cuadrillas operativas</div>
+          </div>
+          <div class="p-3 bg-amber-50 text-amber-700 rounded-2xl">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">FUERA DE PLAZO</div>
+            <div class="text-3xl font-black text-rose-600 mt-1">3</div>
+            <div class="text-xs text-rose-700 font-bold mt-0.5">Bloquean semáforo a 0%</div>
+          </div>
+          <div class="p-3 bg-rose-50 text-rose-700 rounded-2xl">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desglose por las 6 Delegaciones -->
+      <div class="muni-card p-6 space-y-4">
+        <div>
+          <h3 class="text-base font-black text-slate-900">Desglose Operativo por Delegación Territorial (La Serena)</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Evaluación comparativa de carga de trabajo, cumplimiento de compromisos y cuadrillas en terreno.</p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase">
+                <th class="py-3 px-3">DELEGACIÓN</th>
+                <th class="py-3 px-3">CUADRILLAS</th>
+                <th class="py-3 px-3">VALIDADOS (CHECK=1)</th>
+                <th class="py-3 px-3">PENDIENTES</th>
+                <th class="py-3 px-3">VENCIDOS</th>
+                <th class="py-3 px-3 text-right">RENDIMIENTO PROMEDIO</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Centro
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">1</td>
+                <td class="py-3 px-3 text-rose-700 font-bold flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i> 1</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">10%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Rural
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> La Antena
+                </td>
+                <td class="py-3 px-3">0 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> La Pampa
+                </td>
+                <td class="py-3 px-3">2 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">1</td>
+                <td class="py-3 px-3">2</td>
+                <td class="py-3 px-3 text-rose-700 font-bold flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i> 2</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">6%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Avenida del Mar
+                </td>
+                <td class="py-3 px-3">0 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Las Compañías
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">1</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: NUEVO REQUERIMIENTO VECINAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-nuevo-ticket" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-red-800 uppercase">INGRESO A TUBO DE TRABAJO</div>
+            <h3 class="text-base font-black text-slate-900">Nuevo Requerimiento Vecinal</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-nuevo-ticket')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">RUT SOLICITANTE / VECINO *</label>
+          <input type="text" value="12.345.678-9" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">NOMBRE COMPLETO DEL VECINO *</label>
+          <input type="text" value="Juan Pérez Morales" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">TELÉFONO DE CONTACTO</label>
+          <input type="text" value="+56 9 8765 4321" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DIRECCIÓN / SECTOR DE LA SERENA *</label>
+          <input type="text" value="Av. Cuatro Esquinas 850, La Pampa" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DELEGACIÓN TERRITORIAL *</label>
+          <select class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+            <option selected>La Pampa</option>
+            <option>Centro</option>
+            <option>Rural</option>
+            <option>La Antena</option>
+            <option>Avenida del Mar</option>
+            <option>Las Compañías</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">PILAR OPERATIVO *</label>
+          <select class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+            <option selected>DISERCO</option>
+            <option>Gestión Social (DIDECO)</option>
+            <option>Seguridad</option>
+            <option>Organizaciones Comunitarias</option>
+          </select>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">FECHA COMPROMISO DE RESOLUCIÓN</label>
+          <input type="date" value="2026-09-18" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DESCRIPCIÓN DETALLADA DEL REQUERIMIENTO *</label>
+          <textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">Despeje y poda preventiva de rama de gran porte que amenaza tendido eléctrico.</textarea>
+        </div>
+      </div>
+
+      <!-- Evidencia Fotográfica Inicial Dropzone -->
+      <div class="border-2 border-dashed border-red-800/40 rounded-2xl p-4 text-center bg-red-50/40 space-y-2">
+        <div class="flex items-center justify-between text-xs font-bold">
+          <span class="flex items-center gap-1.5 text-red-900">
+            <i data-lucide="camera" class="w-4 h-4 text-red-800"></i>
+            <span>EVIDENCIA FOTOGRÁFICA INICIAL (ANTES) *</span>
+          </span>
+          <span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-black">1 / 4 fotos (Mínimo 1)</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center justify-center">
+          <div class="w-10 h-10 rounded-full bg-red-100 text-red-800 flex items-center justify-center mb-1">
+            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold text-slate-700">Foto 'Antes' adjuntada con sello SHA-256</div>
+          <div class="text-[10px] text-slate-500">PNG, JPG, WEBP • Hasta 12 MB c/u</div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+        <button onclick="closeModal('modal-nuevo-ticket')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Cancelar</button>
+        <button onclick="alert('¡Requerimiento ingresado exitosamente al Tubo de Trabajo de La Serena!'); closeModal('modal-nuevo-ticket');" class="px-5 py-2.5 rounded-xl text-xs font-black bg-red-900 hover:bg-red-800 text-white shadow-md transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Ingresar Solicitud a Terreno</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: AUDITORÍA & DICTAMEN SUPERVISOR (CHECK = 1) -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-audit" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black text-red-800 uppercase">MESA DE AUDITORÍA & DICTAMEN</span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">#DIS-PAM-002</span>
+            </div>
+            <h3 class="text-base font-black text-slate-900">Inspección y Resolución de Requerimiento</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-audit')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Resumen Ficha -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Vecino / Solicitante</div>
+          <div class="font-extrabold text-slate-900">Carlos Zepeda</div>
+          <div class="text-slate-500 font-mono text-[11px]">9.876.543-2</div>
+        </div>
+
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Ubicación y Sector</div>
+          <div class="font-extrabold text-slate-900">Av. Cuatro Esquinas 850</div>
+          <div class="text-slate-500 text-[11px]">La Pampa • DISERCO</div>
+        </div>
+
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Funcionario en Terreno</div>
+          <div class="font-extrabold text-slate-900">Rodrigo Morales</div>
+          <div class="text-emerald-700 font-bold text-[11px]">Estado: Realizado</div>
+        </div>
+      </div>
+
+      <!-- Fotos Antes vs Después -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-black text-slate-700">
+          <span class="flex items-center gap-1.5"><i data-lucide="camera" class="w-4 h-4 text-red-800"></i> AUDITORÍA FOTOGRÁFICA DE TERRENO</span>
+          <span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Código: VER-8114-OK</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Foto Antes -->
+          <div class="border border-slate-200 rounded-2xl p-3 bg-slate-50">
+            <div class="text-[11px] font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span>1. Estado Inicial (Antes) • 1 foto(s)</span>
+              <span class="text-[10px] text-slate-400">08:30 hrs</span>
+            </div>
+            <div class="h-44 rounded-xl overflow-hidden bg-slate-200 flex items-center justify-center border border-slate-300 relative group">
+              <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80" alt="Foto Antes" class="w-full h-full object-cover">
+              <span class="absolute bottom-2 left-2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded">Antes de Faena</span>
+            </div>
+          </div>
+
+          <!-- Foto Después -->
+          <div class="border border-slate-200 rounded-2xl p-3 bg-slate-50">
+            <div class="text-[11px] font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span>2. Evidencia de Término (Después) • 1 foto(s)</span>
+              <span class="text-[10px] text-emerald-700 font-bold">11:45 hrs</span>
+            </div>
+            <div class="h-44 rounded-xl overflow-hidden bg-slate-200 flex items-center justify-center border border-slate-300 relative group">
+              <img src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&auto=format&fit=crop&q=80" alt="Foto Después" class="w-full h-full object-cover">
+              <span class="absolute bottom-2 left-2 bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded">Faena Concluida</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dictamen Opciones -->
+      <div class="space-y-2 pt-2">
+        <label class="block text-xs font-black text-slate-900 uppercase tracking-wide">RESOLUCIÓN Y DICTAMEN DEL REQUERIMIENTO</label>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <label class="border-2 border-emerald-500 bg-emerald-50/60 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" checked class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
+            <div>
+              <div class="font-black text-emerald-950">1. Certificar & Aprobar Solicitud</div>
+              <div class="text-[11px] text-emerald-800">Validar calidad del trabajo y registrar cumplimiento de la cuadrilla (+1 Logro).</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">2. Observar & Devolver a Cuadrilla</div>
+              <div class="text-[11px] text-slate-500">Rechazar evidencia y enviar instrucción para que la cuadrilla corrija la labor o foto.</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">3. Reasignar a Otra Delegación</div>
+              <div class="text-[11px] text-slate-500">Derivar el ticket a otra de las 6 delegaciones territoriales por jurisdicción.</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">4. Cancelar Solicitud</div>
+              <div class="text-[11px] text-slate-500">Anular requerimiento por duplicidad, no pertinencia o resolución externa.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Observaciones -->
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">Observaciones de Auditoría (Opcional):</label>
+        <textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none" placeholder="Faena validada en conformidad con estándares municipales..."></textarea>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-audit')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Cerrar sin Cambios</button>
+        <button onclick="alert('¡Dictamen registrado exitosamente! Requerimiento certificado con Check=1.'); closeModal('modal-audit');" class="px-6 py-2.5 rounded-xl text-xs font-black bg-emerald-700 hover:bg-emerald-600 text-white shadow-md transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>✓ Aprobar Check = 1</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: GUÍA VISUAL "¿CÓMO FUNCIONA?" -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-guia" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-5 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="help-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-red-800 uppercase">GUÍA DE OPERACIÓN MUNICIPAL</div>
+            <h3 class="text-base font-black text-slate-900">¿Cómo funciona la Plataforma?</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-guia')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-bold border-b border-slate-200 pb-2">
+        <span class="text-red-800 border-b-2 border-red-800 pb-2 flex items-center gap-1"><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i> 1. Flujo de Trabajo (4 Pasos)</span>
+        <span class="text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"><i data-lucide="gauge" class="w-3.5 h-3.5"></i> 2. Semáforo Dinámico Proporcional</span>
+        <span class="text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"><i data-lucide="shield" class="w-3.5 h-3.5"></i> 3. Roles y Permisos</span>
+      </div>
+
+      <p class="text-xs text-slate-600">La plataforma reemplaza el uso de planillas y garantiza la trazabilidad municipal en 4 pasos estandarizados:</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-red-100 text-red-800 flex items-center justify-center font-black text-xs">1</div>
+          <div class="font-black text-slate-900">Ingreso Vecinal</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">Se registra la solicitud del vecino con RUT, dirección, delegación, área y fotografía del estado inicial (Antes).</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-black text-xs">2</div>
+          <div class="font-black text-slate-900">Ejecución en Terreno</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">La cuadrilla inicia la labor y al terminar sube la fotografía de respaldo (Después) con sello digital inmutable.</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs">3</div>
+          <div class="font-black text-slate-900">Certificación Check = 1</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">El Coordinador audita las fotos Antes/Después, aprueba la calidad o devuelve con observaciones para corregir.</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center font-black text-xs">4</div>
+          <div class="font-black text-slate-900">Bitácora Inmutable</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">Cada acción queda firmada con hash SHA-256 en la Caja Negra para auditoría de Contraloría y DIDECO.</div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeModal('modal-guia')" class="px-5 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: LOGIN / ACCESO OFICIAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-amber-800 uppercase">IDENTIFICACIÓN FUNCIONARIA</div>
+            <h3 class="text-sm font-black text-slate-900">Acceso Oficial Plataforma SGR</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-login')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">RUT o Correo Institucional</label>
+          <input type="text" value="rmorales@laserena.cl" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Contraseña</label>
+          <input type="password" value="••••••••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <button onclick="alert('¡Sesión iniciada correctamente!'); closeModal('modal-login');" class="w-full py-2.5 bg-gradient-to-r from-red-900 to-red-800 text-white font-black rounded-xl shadow-md text-xs transition hover:opacity-90">
+          Iniciar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- FOOTER INSTITUCIONAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-6 px-4 sm:px-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col items-center justify-center text-center gap-2">
+      <span class="font-black text-red-900 text-sm tracking-wide">© 2026 Ilustre Municipalidad de La Serena • Coordinación Territorial</span>
+      <div class="flex flex-wrap justify-center items-center gap-2 text-[11px] font-semibold text-slate-400">
+        <span class="text-slate-500 font-bold">6 Delegaciones Territoriales:</span>
+        <span class="text-slate-600">Centro</span> • <span class="text-slate-600">Rural</span> • <span class="text-slate-600">La Antena</span> • <span class="text-slate-600">La Pampa</span> • <span class="text-slate-600">Av. del Mar</span> • <span class="text-slate-600">Las Compañías</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Experiencia Teléfono Móvil) -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <nav id="mobile-bottom-nav" class="no-print fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 grid grid-cols-4 w-full py-1.5 px-1 shadow-2xl md:hidden safe-area-bottom">
+    <button onclick="switchTab('terreno')" id="mobile-tab-btn-terreno" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-red-900 transition font-black scale-105">
+      <i data-lucide="hard-hat" class="w-5 h-5 text-red-900"></i>
+      <span class="text-[10px] mt-0.5">Terreno</span>
+    </button>
+    <button onclick="switchTab('tubo')" id="mobile-tab-btn-tubo" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="kanban" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Tubo</span>
+    </button>
+    <button onclick="switchTab('coordinacion')" id="mobile-tab-btn-coordinacion" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="user-check" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Auditoría</span>
+    </button>
+    <button onclick="switchTab('alcaldia')" id="mobile-tab-btn-alcaldia" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="building-2" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Alcaldía</span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- JAVASCRIPT NAVEGACIÓN Y REACTIVIDAD -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <script>
+    // Inicializar Iconos Lucide
+    lucide.createIcons();
+
+    // Toggle Vista Tubo de Trabajo (Lista vs Kanban)
+    function setTuboView(mode) {
+      const lista = document.getElementById('tubo-view-lista');
+      const kanban = document.getElementById('tubo-view-kanban');
+      const btnL = document.getElementById('btn-tubo-lista');
+      const btnK = document.getElementById('btn-tubo-kanban');
+      if (!lista || !kanban) return;
+      if (mode === 'kanban') {
+        lista.classList.add('hidden');
+        kanban.classList.remove('hidden');
+        btnK.className = 'px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer';
+        btnL.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
+      } else {
+        lista.classList.remove('hidden');
+        kanban.classList.add('hidden');
+        btnL.className = 'px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer';
+        btnK.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
+      }
+      lucide.createIcons();
+    }
+
+    // Mover Estados en Tubo
+    function moverTubo(id, nuevoEstado) {
+      alert(`[Tubo de Trabajo]: Compromiso ${id} avanzado al estado "${nuevoEstado}" exitosamente.`);
+    }
+
+    // Tabs Switcher
+    function switchTab(tab) {
+      if (tab === 'tubo') {
+        switchTab('terreno');
+        setTuboView('kanban');
+        const sec = document.getElementById('section-tubo-trabajo');
+        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+        });
+        const btnTubo = document.getElementById('tab-btn-tubo');
+        if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+        updateMobileNav('tubo');
+        lucide.createIcons();
+        return;
+      }
+
+      const views = ['terreno', 'coordinacion', 'alcaldia'];
+      views.forEach(v => {
+        const viewEl = document.getElementById('view-' + v);
+        const btnEl = document.getElementById('tab-btn-' + v);
+        if (v === tab) {
+          viewEl.classList.remove('hidden');
+          if (btnEl) btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+        } else {
+          viewEl.classList.add('hidden');
+          if (btnEl) btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+        }
+      });
+      const btnTubo = document.getElementById('tab-btn-tubo');
+      if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+
+      updateMobileNav(tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
+    }
+
+    function updateMobileNav(activeTab) {
+      const mobileTabs = ['terreno', 'tubo', 'coordinacion', 'alcaldia'];
+      mobileTabs.forEach(t => {
+        const mBtn = document.getElementById('mobile-tab-btn-' + t);
+        if (mBtn) {
+          if (t === activeTab) {
+            mBtn.className = 'mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-red-900 transition font-black scale-105';
+            const icon = mBtn.querySelector('i');
+            if (icon) icon.className = 'w-5 h-5 text-red-900';
+          } else {
+            mBtn.className = 'mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium';
+            const icon = mBtn.querySelector('i');
+            if (icon) icon.className = 'w-5 h-5 text-slate-400';
+          }
+        }
+      });
+    }
+
+    // Modal helpers
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ── BARRA ADAPTATIVA / SIMULADOR DE RENDIMIENTO EN TERRENO ──
+    let currentFuncionario = {
+      nombre: 'Rodrigo Morales',
+      delegacion: 'La Pampa',
+      area: 'DISERCO',
+      rut: '14.238.912-4',
+      meta: 120,
+      validadas: 1,
+      esperada: 66.7,
+      bono: 10,
+      penalizacion: 0
+    };
+    let simulatedTasks = 0;
+    let isSimulatorOpen = false;
+
+    function toggleSimulador() {
+      isSimulatorOpen = !isSimulatorOpen;
+      const container = document.getElementById('simulador-container');
+      const btn = document.getElementById('btn-toggle-sim');
+      const btnText = document.getElementById('btn-toggle-sim-text');
+      const arrow = document.getElementById('sim-arrow');
+
+      if (isSimulatorOpen) {
+        if (container) container.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+        if (btnText) btnText.innerText = 'Ocultar Simulador (Barra Adaptativa)';
+        if (btn) btn.className = 'no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-200 text-slate-900 border-slate-400 shadow-2xs';
+      } else {
+        if (container) container.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+        if (btnText) btnText.innerText = '¿Deseas simular impacto de tareas? (Barra Adaptativa)';
+        if (btn) btn.className = 'no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-2xs';
+        resetSimulacion();
+      }
+      lucide.createIcons();
+    }
+
+    function simularTareas(val) {
+      simulatedTasks = parseInt(val, 10) || 0;
+      const resetBtn = document.getElementById('btn-reset-sim');
+      const simBadge = document.getElementById('sim-badge');
+
+      if (simulatedTasks > 0) {
+        if (resetBtn) resetBtn.classList.remove('hidden');
+        if (simBadge) {
+          simBadge.innerText = `+${simulatedTasks} tareas simuladas`;
+          simBadge.className = 'text-xs font-mono font-black text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-xs';
+        }
+      } else {
+        if (resetBtn) resetBtn.classList.add('hidden');
+        if (simBadge) {
+          simBadge.innerText = 'Sin simulación (+0 tareas)';
+          simBadge.className = 'text-xs font-mono font-black text-red-800 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs';
+        }
+      }
+
+      const tareasTotales = currentFuncionario.validadas + simulatedTasks;
+      const pctBruto = currentFuncionario.esperada > 0 ? Math.round((tareasTotales / currentFuncionario.esperada) * 100) : 0;
+      const pctTope = Math.min(150, pctBruto);
+      let pctFinal = pctTope + currentFuncionario.bono - currentFuncionario.penalizacion;
+      pctFinal = Math.max(0, Math.min(150, pctFinal));
+
+      // Actualizar número en grande
+      const gaugePct = document.getElementById('gauge-pct');
+      if (gaugePct) gaugePct.innerText = pctFinal + '%';
+
+      // Actualizar desglose matemático
+      const calcBase = document.getElementById('calc-base');
+      if (calcBase) calcBase.innerText = pctTope + '%';
+      const resFormula = document.getElementById('resultado-formula');
+      if (resFormula) resFormula.innerText = `Resultado: ${pctFinal}% (Tope 150%)`;
+
+      // Ancho barra adaptativa (0% a 150% mapeado linealmente a 0% - 100% de la barra)
+      const barPercent = Math.min(100, Math.max(0, (pctFinal / 150) * 100));
+      const gaugeBar = document.getElementById('gauge-bar');
+      if (gaugeBar) gaugeBar.style.width = barPercent + '%';
+
+      // Pin indicador flotante
+      const gaugePin = document.getElementById('gauge-pin');
+      if (gaugePin) {
+        gaugePin.style.left = barPercent + '%';
+        const pinSpan = gaugePin.querySelector('span');
+        const pinDiv = gaugePin.querySelector('div');
+        if (pinSpan) {
+          pinSpan.innerText = pctFinal + '%';
+          if (pctFinal >= 100) {
+            pinSpan.className = 'bg-emerald-700 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-emerald-700';
+          } else if (pctFinal >= 60) {
+            pinSpan.className = 'bg-amber-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-amber-600';
+          } else {
+            pinSpan.className = 'bg-red-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-red-800';
+          }
+        }
+      }
+
+      // Badge Alerta Semáforo dinámico
+      const badgeAlerta = document.getElementById('gauge-alert-badge');
+      if (badgeAlerta) {
+        if (pctFinal >= 100) {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-full text-xs font-black';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>CUMPLIMIENTO ÓPTIMO (≥100%)</span>';
+        } else if (pctFinal >= 60) {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-amber-50 text-amber-900 border border-amber-300 px-3 py-1 rounded-full text-xs font-black';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span><span>PRECAUCIÓN / REGULAR (60% - 99%)</span>';
+        } else {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black animate-pulse';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span><span>ALERTA DE RENDIMIENTO (&lt;60%)</span>';
+        }
+      }
+
+      // Actualizar tarjeta Validados
+      const statVal = document.getElementById('stat-validados');
+      if (statVal) {
+        statVal.innerHTML = `${tareasTotales} <span class="text-xs font-normal text-slate-500">/ ${currentFuncionario.esperada} esp.</span>`;
+      }
+    }
+
+    function resetSimulacion() {
+      const slider = document.getElementById('slider-adaptativo');
+      if (slider) slider.value = 0;
+      simularTareas(0);
+    }
+
+    // Funcionario Dropdown Toggle
+    function toggleFuncSelector() {
+      const d = document.getElementById('func-dropdown');
+      d.classList.toggle('hidden');
+    }
+
+    // Select Funcionario Demo
+    function selectFuncionario(nombre, delegacion, area, rut, meta, pct, esp) {
+      currentFuncionario.nombre = nombre;
+      currentFuncionario.delegacion = delegacion;
+      currentFuncionario.area = area;
+      currentFuncionario.rut = rut;
+      currentFuncionario.meta = meta;
+      currentFuncionario.esperada = esp;
+      currentFuncionario.validadas = Math.max(0, Math.round(((pct - 10) / 100) * esp));
+
+      document.getElementById('selected-func-name').innerText = nombre;
+      document.getElementById('selected-func-del').innerText = delegacion;
+      document.getElementById('card-name').innerText = nombre;
+      document.getElementById('card-del').innerText = delegacion;
+      document.getElementById('card-area').innerText = area;
+      document.getElementById('card-rut').innerText = 'RUT: ' + rut;
+      document.getElementById('card-meta').innerText = meta;
+      document.getElementById('gauge-esperada').innerText = esp + ' tickets';
+
+      resetSimulacion();
+      document.getElementById('func-dropdown').classList.add('hidden');
+    }
+
+    // Close dropdown on outside click
+    window.addEventListener('click', function(e) {
+      const btn = document.querySelector('#selected-func-name');
+      const dd = document.getElementById('func-dropdown');
+      if (dd && !dd.contains(e.target) && !e.target.closest('button[onclick="toggleFuncSelector()"]')) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    // Update Live DateTime
+    function updateDateTime() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('es-CL', options);
+      const timeStr = now.toLocaleTimeString('es-CL');
+      const el = document.getElementById('live-datetime');
+      if (el) el.innerText = `${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)} | ${timeStr}`;
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Soporte para deep-links e inicialización por Hash
+    function handleHashRoute() {
+      const h = window.location.hash.toLowerCase();
+      if (h.includes('tubo')) {
+        switchTab('tubo');
+      } else if (h.includes('coordinacion') || h.includes('coord')) {
+        switchTab('coordinacion');
+      } else if (h.includes('alcaldia')) {
+        switchTab('alcaldia');
+      } else {
+        switchTab('terreno');
+      }
+      if (h.includes('audit')) {
+        openModal('modal-audit');
+      }
+      if (h.includes('sim')) {
+        toggleSimulador();
+        const s = document.getElementById('slider-adaptativo');
+        if (s) {
+          s.value = 35;
+          simularTareas(35);
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', handleHashRoute);
+    window.addEventListener('hashchange', handleHashRoute);
+  </script>
+
+</body>
+</html>
