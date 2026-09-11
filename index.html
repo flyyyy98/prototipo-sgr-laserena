@@ -58,19 +58,81 @@
       background-color: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(4px);
     }
+    .print-only {
+      display: none;
+    }
+    @media print {
+      #top-status-bar,
+      header,
+      .no-print,
+      button,
+      input,
+      select,
+      .modal-backdrop,
+      .tab-btn,
+      #btn-ingresar-requerimiento,
+      .kanban-actions {
+        display: none !important;
+      }
+      body {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 10pt !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .muni-card {
+        background: #ffffff !important;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 12pt !important;
+        border-radius: 8px !important;
+      }
+      main {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      footer {
+        background: #ffffff !important;
+        border-top: 1px solid #94a3b8 !important;
+        padding-top: 12pt !important;
+        margin-top: 16pt !important;
+      }
+      @page {
+        margin: 1.2cm;
+        size: letter portrait;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-100 text-slate-900">
 
   <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- ENCABEZADO EXCLUSIVO PARA IMPRESIÓN OFICIAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="print-only mb-6 border-b-2 border-red-900 pb-3 text-center">
+    <h1 class="text-xl font-black text-red-900 uppercase tracking-wide">ILUSTRE MUNICIPALIDAD DE LA SERENA</h1>
+    <h2 class="text-xs font-bold text-slate-800">Sistema de Gestión y Seguimiento de Resultados (SGR) • Coordinación Territorial</h2>
+    <p class="text-[10px] text-slate-500 mt-0.5">Ficha de Desempeño Operativo y Compromisos Territoriales • 6 Delegaciones</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
   <!-- TOP STATUS BAR INSTITUCIONAL -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div class="bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 flex flex-wrap justify-between items-center border-b border-red-950/40 font-medium">
+  <div id="top-status-bar" class="no-print bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 flex flex-wrap justify-between items-center border-b border-red-950/40 font-medium">
     <div class="flex items-center gap-2">
       <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
       <span id="live-datetime">Viernes, 11 de Septiembre de 2026 • 07:00:00 • La Serena • Chile</span>
     </div>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2.5">
+      <!-- Botón Imprimir Ficha -->
+      <button onclick="window.print()" class="no-print flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-0.5 rounded-full border border-slate-700 cursor-pointer transition shadow-xs">
+        <i data-lucide="printer" class="w-3 h-3 text-amber-400"></i>
+        <span>Imprimir Ficha</span>
+      </button>
 
       <!-- Theme Button -->
       <button class="flex items-center gap-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-0.5 rounded-md border border-slate-700 transition">
@@ -113,6 +175,14 @@
           <div class="text-left leading-tight">
             <div>Terreno</div>
             <div class="text-[9px] font-normal opacity-80">Cuadrilla Operativa</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-tubo" onclick="switchTab('tubo')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="kanban" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Tubo de Trabajo</div>
+            <div class="text-[9px] font-normal opacity-80">Agenda 4 Estados</div>
           </div>
         </button>
 
@@ -366,92 +436,293 @@
 
       </div>
 
-      <!-- Requerimientos en Cuadrilla (Listado de Tickets) -->
-      <div class="muni-card p-6 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-4">
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <!-- TUBO DE TRABAJO (AGENDA COLECTIVA DE COMPROMISOS) -->
+      <!-- ══════════════════════════════════════════════════════════ -->
+      <div id="section-tubo-trabajo" class="muni-card p-6 space-y-5">
+        
+        <!-- Encabezado del Tubo con Metas y Switcher de Vistas -->
+        <div class="flex flex-wrap items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
           <div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-lg font-black text-slate-900">Requerimientos en Cuadrilla</h3>
-              <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full">2 solicitudes</span>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-red-900 text-amber-300 flex items-center justify-center shadow-xs">
+                <i data-lucide="kanban" class="w-4 h-4"></i>
+              </div>
+              <h3 class="text-lg font-black text-slate-900">Tubo de Trabajo (Agenda Colectiva)</h3>
+              <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full">4 compromisos activos</span>
+              
+              <!-- Badge Meta Colectiva 80% (RN-006) -->
+              <div class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-xs">
+                <i data-lucide="target" class="w-3.5 h-3.5 text-emerald-600"></i>
+                <span>Meta Colectiva: 83.3% (Exigencia ≥ 80% RN-006)</span>
+              </div>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Gestione los tickets asignados a su cuadrilla, inicie faenas y adjunte de 1 a 4 fotos de respaldo tras concluir.</p>
+            <p class="text-xs text-slate-500 mt-1 font-medium">Repositorio centralizado de compromisos vecinales en 4 estados transitables con alertas tempranas.</p>
           </div>
 
+          <!-- Switcher Vista Lista vs Tablero Kanban -->
+          <div class="no-print flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200/80">
+            <button id="btn-tubo-lista" onclick="setTuboView('lista')" class="px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer">
+              <i data-lucide="list" class="w-3.5 h-3.5"></i>
+              <span>Vista Lista</span>
+            </button>
+            <button id="btn-tubo-kanban" onclick="setTuboView('kanban')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+              <span>Tablero Kanban (4 Estados)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- VISTA LISTA DEL TUBO -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div id="tubo-view-lista" class="space-y-4">
           <!-- Filtros y Búsqueda -->
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="relative">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="relative no-print">
               <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" placeholder="Buscar RUT, vecino, código..." class="pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-red-800 focus:outline-none w-56">
+              <input type="text" placeholder="Buscar RUT, vecino, código..." class="pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-red-800 focus:outline-none w-64">
             </div>
 
-            <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            <!-- Pill selector con los 4 estados de negocio -->
+            <div class="no-print flex flex-wrap items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
               <button class="px-3 py-1 bg-white text-slate-900 rounded-lg shadow-xs">Todos</button>
-              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Pendiente</button>
-              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">En proceso</button>
-              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Observado</button>
-              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Realizado</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">1. Ingresado</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">2. Pendiente</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">3. En proceso</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">4. Realizado</button>
+            </div>
+          </div>
+
+          <!-- Lista de Tickets -->
+          <div class="space-y-3">
+            <!-- Ticket 1: Ingresado (Nuevo en agenda) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-slate-100 text-slate-700 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-slate-300">TUB-2026-042</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Rosa Morales</span>
+                  <span class="text-xs text-slate-400 font-mono">15.112.433-K</span>
+                  <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">Rural</span>
+                  <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> 1. Ingresado
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Instalación de luminaria pública y foco LED en pasaje El Romero por seguridad vecinal.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Pasaje El Romero s/n, Delegación Rural</span>
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 18-09-2026</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="moverTubo('TUB-2026-042', 'PENDIENTE')" class="text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition">
+                  Pasar a Pendiente →
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 2: Pendiente con Alerta 3 Días (RN-005) -->
+            <div class="bg-white border-2 border-amber-300 rounded-2xl p-4 hover:border-amber-400 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-amber-50 text-amber-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-amber-300">TUB-2026-039</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Héctor Carvajal</span>
+                  <span class="text-xs text-slate-400 font-mono">11.450.892-1</span>
+                  <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">Rural</span>
+                  <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> 2. Pendiente
+                  </span>
+                  <!-- ALERTA PREVENTIVA A 3 DÍAS (RN-005) -->
+                  <span class="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs animate-pulse">
+                    <i data-lucide="alert-triangle" class="w-3 h-3 text-slate-950"></i> Alerta: Vence en 3 días (RN-005)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Revisión y desobstrucción de fosa séptica comunitaria APR Lambert con camión limpiafosas.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Callejón Los Aromos s/n, Lambert</span>
+                  <span class="flex items-center gap-1 font-bold text-amber-800"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso Pactado: 14-09-2026 (Próximo a Vencer)</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="moverTubo('TUB-2026-039', 'PROCESO')" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 px-3 py-1.5 rounded-xl transition">
+                  Iniciar en Terreno →
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 3: En Proceso / En Espera de Validación -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
+                  <span class="font-extrabold text-slate-900 text-sm">Carlos Zepeda</span>
+                  <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
+                  <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                  <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span> 3. En Proceso
+                  </span>
+                  <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="hourglass" class="w-3 h-3"></i> En Espera de Validación
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Av. Cuatro Esquinas 850, La Pampa</span>
+                  <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 16-09-2026</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 no-print">
+                <button onclick="openModal('modal-audit')" class="bg-red-900 hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                  <span>Ver Evidencias</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Ticket 4: Realizado / Check=1 Aprobado -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4 opacity-90">
+              <div class="space-y-1.5 max-w-2xl">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-001</span>
+                  <span class="font-extrabold text-slate-900 text-sm">María González</span>
+                  <span class="text-xs text-slate-400 font-mono">12.345.678-9</span>
+                  <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                  <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> 4. Realizado & Check=1 Aprobado (+1 Logro)
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 font-medium">Retiro de escombros y despeje de vereda tras faena de canalización.</p>
+                <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Calle Los Perales 120, La Pampa</span>
+                  <span class="flex items-center gap-1 text-emerald-700 font-bold"><i data-lucide="shield-check" class="w-3 h-3"></i> Dictamen Supervisor: Conforme</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> Certificado
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Lista de Tickets -->
-        <div class="space-y-3">
-          <!-- Ticket 1 (En espera de validación) -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
-            <div class="space-y-1.5 max-w-2xl">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
-                <span class="font-extrabold text-slate-900 text-sm">Carlos Zepeda</span>
-                <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
-                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
-                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <i data-lucide="check" class="w-3 h-3"></i> Realizado
+        <!-- ────────────────────────────────────────────────────────── -->
+        <!-- VISTA TABLERO KANBAN (4 ESTADOS OFICIALES HDU-18) -->
+        <!-- ────────────────────────────────────────────────────────── -->
+        <div id="tubo-view-kanban" class="hidden">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <!-- Columna 1: 1. Ingresado -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
+                <span class="text-xs font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                  <span>1. Ingresado</span>
                 </span>
-                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <i data-lucide="hourglass" class="w-3 h-3"></i> En Espera de Validación
-                </span>
+                <span class="bg-white text-slate-800 text-xs font-bold px-2 py-0.5 rounded-full border border-slate-200 shadow-xs">1</span>
               </div>
-              <p class="text-xs text-slate-700 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
-              <div class="flex items-center gap-4 text-[11px] text-slate-500">
-                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Av. Cuatro Esquinas 850, La Pampa</span>
-                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 16-09-2026</span>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">TUB-2026-042</span>
+                    <span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-1.5 py-0.5 rounded">Rural</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Luminaria pasaje El Romero</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Vecina Rosa Morales solicita foco LED por seguridad.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>Plazo: 18-Sep</span>
+                    <button onclick="moverTubo('TUB-2026-042', 'PENDIENTE')" class="no-print text-[10px] bg-red-50 text-red-900 hover:bg-red-100 font-bold px-2 py-0.5 rounded transition">
+                      Avanzar →
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <button onclick="openModal('modal-audit')" class="bg-red-900 hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
-                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                <span>Ver Evidencias</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Ticket 2 (Aprobado Check=1) -->
-          <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4 opacity-90">
-            <div class="space-y-1.5 max-w-2xl">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-001</span>
-                <span class="font-extrabold text-slate-900 text-sm">María González</span>
-                <span class="text-xs text-slate-400 font-mono">12.345.678-9</span>
-                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
-                <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <i data-lucide="check-circle-2" class="w-3 h-3"></i> Check = 1 Aprobado (+1 Logro)
+            <!-- Columna 2: 2. Pendiente -->
+            <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-amber-200">
+                <span class="text-xs font-black uppercase text-amber-800 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  <span>2. Pendiente</span>
                 </span>
+                <span class="bg-white text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full border border-amber-200 shadow-xs">1</span>
               </div>
-              <p class="text-xs text-slate-700 font-medium">Retiro de escombros y despeje de vereda tras faena de canalización.</p>
-              <div class="flex items-center gap-4 text-[11px] text-slate-500">
-                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Calle Los Perales 120, La Pampa</span>
-                <span class="flex items-center gap-1 text-emerald-700 font-bold"><i data-lucide="shield-check" class="w-3 h-3"></i> Dictamen Supervisor: Conforme</span>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border-2 border-amber-300 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">TUB-2026-039</span>
+                    <span class="text-[9px] bg-amber-500 text-slate-950 font-black px-1.5 py-0.5 rounded flex items-center gap-1">
+                      <i data-lucide="alert-triangle" class="w-2.5 h-2.5"></i> Vence 3 días
+                    </span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Alcantarillado APR Lambert</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Coordinación camión limpiafosas con Dirección de Obras.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span class="text-amber-800 font-bold">14-Sep</span>
+                    <button onclick="moverTubo('TUB-2026-039', 'PROCESO')" class="no-print text-[10px] bg-amber-100 text-amber-900 hover:bg-amber-200 font-bold px-2 py-0.5 rounded transition">
+                      A Terreno →
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1">
-                <i data-lucide="check" class="w-3.5 h-3.5"></i> Certificado
-              </span>
+            <!-- Columna 3: 3. En Proceso -->
+            <div class="bg-rose-50/50 rounded-2xl p-4 border border-rose-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-rose-200">
+                <span class="text-xs font-black uppercase text-red-900 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                  <span>3. En Proceso</span>
+                </span>
+                <span class="bg-white text-red-900 text-xs font-bold px-2 py-0.5 rounded-full border border-rose-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-rose-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">DIS-PAM-002</span>
+                    <span class="text-[10px] bg-rose-100 text-rose-800 font-bold px-1.5 py-0.5 rounded">La Pampa</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Poda de árbol con riesgo</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Cuadrilla ejecutando faena con motosierra y camión tolva.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>16-Sep</span>
+                    <button onclick="openModal('modal-audit')" class="no-print text-[10px] bg-red-900 text-white hover:bg-red-800 font-bold px-2 py-0.5 rounded transition">
+                      Evidencias →
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <!-- Columna 4: 4. Realizado -->
+            <div class="bg-emerald-50/60 rounded-2xl p-4 border border-emerald-200 flex flex-col">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200">
+                <span class="text-xs font-black uppercase text-emerald-800 tracking-wider flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                  <span>4. Realizado</span>
+                </span>
+                <span class="bg-white text-emerald-900 text-xs font-bold px-2 py-0.5 rounded-full border border-emerald-200 shadow-xs">1</span>
+              </div>
+              <div class="space-y-3 flex-grow">
+                <div class="bg-white p-3.5 rounded-xl border border-emerald-200 shadow-xs hover:shadow-sm transition">
+                  <div class="flex justify-between items-start mb-1.5">
+                    <span class="text-[10px] font-mono font-bold text-slate-500">DIS-PAM-001</span>
+                    <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">Check = 1</span>
+                  </div>
+                  <h4 class="text-xs font-bold text-slate-900">Retiro de escombros</h4>
+                  <p class="text-[11px] text-slate-600 mt-1">Labor certificada por supervisor. Impacta +1 al semáforo.</p>
+                  <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-emerald-700 font-bold">
+                    <span>Certificado</span>
+                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+
       </div>
 
     </div>
@@ -1071,14 +1342,12 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- FOOTER INSTITUCIONAL -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <footer class="bg-white border-t border-slate-200 mt-auto py-4 px-4 sm:px-8 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-2">
-        <span class="font-black text-red-900">© 2026 Ilustre Municipalidad de La Serena • Coordinación Territorial</span>
-        <span class="bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Caja Negra & SHA-256 Activo</span>
-      </div>
-      <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
-        <span>Centro</span> • <span>Rural</span> • <span>La Antena</span> • <span>La Pampa</span> • <span>Av. del Mar</span> • <span>Las Compañías</span>
+  <footer class="bg-white border-t border-slate-200 mt-auto py-6 px-4 sm:px-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col items-center justify-center text-center gap-2">
+      <span class="font-black text-red-900 text-sm tracking-wide">© 2026 Ilustre Municipalidad de La Serena • Coordinación Territorial</span>
+      <div class="flex flex-wrap justify-center items-center gap-2 text-[11px] font-semibold text-slate-400">
+        <span class="text-slate-500 font-bold">6 Delegaciones Territoriales:</span>
+        <span class="text-slate-600">Centro</span> • <span class="text-slate-600">Rural</span> • <span class="text-slate-600">La Antena</span> • <span class="text-slate-600">La Pampa</span> • <span class="text-slate-600">Av. del Mar</span> • <span class="text-slate-600">Las Compañías</span>
       </div>
     </div>
   </footer>
@@ -1090,20 +1359,62 @@
     // Inicializar Iconos Lucide
     lucide.createIcons();
 
+    // Toggle Vista Tubo de Trabajo (Lista vs Kanban)
+    function setTuboView(mode) {
+      const lista = document.getElementById('tubo-view-lista');
+      const kanban = document.getElementById('tubo-view-kanban');
+      const btnL = document.getElementById('btn-tubo-lista');
+      const btnK = document.getElementById('btn-tubo-kanban');
+      if (!lista || !kanban) return;
+      if (mode === 'kanban') {
+        lista.classList.add('hidden');
+        kanban.classList.remove('hidden');
+        btnK.className = 'px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer';
+        btnL.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
+      } else {
+        lista.classList.remove('hidden');
+        kanban.classList.add('hidden');
+        btnL.className = 'px-3 py-1.5 rounded-lg bg-white text-red-900 shadow-xs flex items-center gap-1.5 transition cursor-pointer';
+        btnK.className = 'px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition cursor-pointer';
+      }
+      lucide.createIcons();
+    }
+
+    // Mover Estados en Tubo
+    function moverTubo(id, nuevoEstado) {
+      alert(`[Tubo de Trabajo]: Compromiso ${id} avanzado al estado "${nuevoEstado}" exitosamente.`);
+    }
+
     // Tabs Switcher
     function switchTab(tab) {
+      if (tab === 'tubo') {
+        switchTab('terreno');
+        setTuboView('kanban');
+        const sec = document.getElementById('section-tubo-trabajo');
+        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+        });
+        const btnTubo = document.getElementById('tab-btn-tubo');
+        if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+        lucide.createIcons();
+        return;
+      }
+
       const views = ['terreno', 'coordinacion', 'alcaldia'];
       views.forEach(v => {
         const viewEl = document.getElementById('view-' + v);
         const btnEl = document.getElementById('tab-btn-' + v);
         if (v === tab) {
           viewEl.classList.remove('hidden');
-          btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+          if (btnEl) btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
         } else {
           viewEl.classList.add('hidden');
-          btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+          if (btnEl) btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
         }
       });
+      const btnTubo = document.getElementById('tab-btn-tubo');
+      if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
       lucide.createIcons();
     }
 
