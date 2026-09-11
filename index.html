@@ -2,7 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SGR La Serena">
+  <meta name="theme-color" content="#850000">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="logo.png">
   <title>Plataforma Territorial • Ilustre Municipalidad de La Serena</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -38,6 +45,18 @@
       background-color: #F1F5F9;
       color: #0F172A;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .safe-area-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
     .glass-header {
       background: linear-gradient(135deg, #4A0000 0%, #680000 50%, #850000 100%);
@@ -169,7 +188,7 @@
       </div>
 
       <!-- Navigation Tabs (Terreno / Coordinación / Alcaldía) -->
-      <nav class="flex items-center gap-1.5 sm:gap-2 bg-red-950/50 p-1 rounded-2xl border border-red-800/40 backdrop-blur-xs">
+      <nav class="hidden md:flex items-center gap-1.5 sm:gap-2 bg-red-950/50 p-1 rounded-2xl border border-red-800/40 backdrop-blur-xs">
         <button id="tab-btn-terreno" onclick="switchTab('terreno')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900">
           <i data-lucide="hard-hat" class="w-4 h-4"></i>
           <div class="text-left leading-tight">
@@ -255,7 +274,7 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MAIN CONTAINER -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 pb-24 md:pb-8">
 
     <!-- ────────────────────────────────────────────────────────── -->
     <!-- VISTA 1: PANEL TERRENO (CUADRILLA OPERATIVA) -->
@@ -670,10 +689,10 @@
         <!-- VISTA TABLERO KANBAN (4 ESTADOS OFICIALES HDU-18) -->
         <!-- ────────────────────────────────────────────────────────── -->
         <div id="tubo-view-kanban" class="hidden">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="flex md:grid md:grid-cols-4 gap-3.5 sm:gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-none">
             
             <!-- Columna 1: 1. Ingresado -->
-            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col">
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col">
               <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
                 <span class="text-xs font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
@@ -700,7 +719,7 @@
             </div>
 
             <!-- Columna 2: 2. Pendiente -->
-            <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200 flex flex-col">
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-amber-50/60 rounded-2xl p-4 border border-amber-200 flex flex-col">
               <div class="flex items-center justify-between pb-3 mb-3 border-b border-amber-200">
                 <span class="text-xs font-black uppercase text-amber-800 tracking-wider flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
@@ -729,7 +748,7 @@
             </div>
 
             <!-- Columna 3: 3. En Proceso -->
-            <div class="bg-rose-50/50 rounded-2xl p-4 border border-rose-200 flex flex-col">
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-rose-50/50 rounded-2xl p-4 border border-rose-200 flex flex-col">
               <div class="flex items-center justify-between pb-3 mb-3 border-b border-rose-200">
                 <span class="text-xs font-black uppercase text-red-900 tracking-wider flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
@@ -756,7 +775,7 @@
             </div>
 
             <!-- Columna 4: 4. Realizado -->
-            <div class="bg-emerald-50/60 rounded-2xl p-4 border border-emerald-200 flex flex-col">
+            <div class="min-w-[82vw] sm:min-w-[300px] md:min-w-0 snap-center shrink-0 md:shrink bg-emerald-50/60 rounded-2xl p-4 border border-emerald-200 flex flex-col">
               <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-200">
                 <span class="text-xs font-black uppercase text-emerald-800 tracking-wider flex items-center gap-1.5">
                   <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
@@ -1059,8 +1078,8 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MODAL: NUEVO REQUERIMIENTO VECINAL -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div id="modal-nuevo-ticket" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+  <div id="modal-nuevo-ticket" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
       
       <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1167,8 +1186,8 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MODAL: AUDITORÍA & DICTAMEN SUPERVISOR (CHECK = 1) -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div id="modal-audit" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+  <div id="modal-audit" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-3xl w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
       
       <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1304,8 +1323,8 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MODAL: GUÍA VISUAL "¿CÓMO FUNCIONA?" -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div id="modal-guia" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 border border-slate-100 my-8">
+  <div id="modal-guia" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl space-y-5 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
@@ -1364,8 +1383,8 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MODAL: LOGIN / ACCESO OFICIAL -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 border border-slate-100 my-0 sm:my-8 max-h-[92vh] sm:max-h-[85vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center">
@@ -1413,6 +1432,28 @@
   </footer>
 
   <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Experiencia Teléfono Móvil) -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <nav id="mobile-bottom-nav" class="no-print fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 flex items-center justify-around py-1.5 px-2 shadow-2xl md:hidden safe-area-bottom">
+    <button onclick="switchTab('terreno')" id="mobile-tab-btn-terreno" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-red-900 transition font-black scale-105">
+      <i data-lucide="hard-hat" class="w-5 h-5 text-red-900"></i>
+      <span class="text-[10px] mt-0.5">Terreno</span>
+    </button>
+    <button onclick="switchTab('tubo')" id="mobile-tab-btn-tubo" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="kanban" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Tubo</span>
+    </button>
+    <button onclick="switchTab('coordinacion')" id="mobile-tab-btn-coordinacion" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="user-check" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Auditoría</span>
+    </button>
+    <button onclick="switchTab('alcaldia')" id="mobile-tab-btn-alcaldia" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium">
+      <i data-lucide="building-2" class="w-5 h-5"></i>
+      <span class="text-[10px] mt-0.5">Alcaldía</span>
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
   <!-- JAVASCRIPT NAVEGACIÓN Y REACTIVIDAD -->
   <!-- ══════════════════════════════════════════════════════════ -->
   <script>
@@ -1457,6 +1498,7 @@
         });
         const btnTubo = document.getElementById('tab-btn-tubo');
         if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+        updateMobileNav('tubo');
         lucide.createIcons();
         return;
       }
@@ -1475,7 +1517,28 @@
       });
       const btnTubo = document.getElementById('tab-btn-tubo');
       if (btnTubo) btnTubo.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+
+      updateMobileNav(tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       lucide.createIcons();
+    }
+
+    function updateMobileNav(activeTab) {
+      const mobileTabs = ['terreno', 'tubo', 'coordinacion', 'alcaldia'];
+      mobileTabs.forEach(t => {
+        const mBtn = document.getElementById('mobile-tab-btn-' + t);
+        if (mBtn) {
+          if (t === activeTab) {
+            mBtn.className = 'mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-red-900 transition font-black scale-105';
+            const icon = mBtn.querySelector('i');
+            if (icon) icon.className = 'w-5 h-5 text-red-900';
+          } else {
+            mBtn.className = 'mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-slate-400 hover:text-slate-700 transition font-medium';
+            const icon = mBtn.querySelector('i');
+            if (icon) icon.className = 'w-5 h-5 text-slate-400';
+          }
+        }
+      });
     }
 
     // Modal helpers

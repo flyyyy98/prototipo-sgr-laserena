@@ -1,0 +1,23 @@
+﻿{
+  "short_name": "SGR La Serena",
+  "name": "Sistema de Gestión y Resultados • Ilustre Municipalidad de La Serena",
+  "description": "Plataforma de Coordinación Territorial y Medición del Cumplimiento Trimestral",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-laserena.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#850000",
+  "theme_color": "#850000",
+  "display": "standalone",
+  "orientation": "portrait"
+}
