@@ -1,0 +1,93 @@
+# 🚀 PLATAFORMA Y PROTOTIPO TERRITORIAL SGR - LA SERENA
+## Sistema de Gestión y Seguimiento de Resultados • Convenio INACAP 2026
+**Docente Evaluador:** Jorge Luis Alejandro Cortés Gallardo  
+**Asignatura:** Proyecto Integrador de Software  
+**Institución:** Ilustre Municipalidad de La Serena • 6 Delegaciones Territoriales  
+
+---
+
+## 📌 1. Arquitectura Oficial de la Plataforma
+
+A diferencia de un template estático genérico, esta maqueta corresponde fielmente a la **plataforma web oficial** desarrollada para el municipio:
+
+* **Frontend:** Next.js 16 (React 19, Tailwind CSS v4, Lucide Icons, Turbopack) ubicado en `projecto/la-serena-app/`.
+* **Backend:** Django REST Framework (Python 3.12, SQLite / PostgreSQL, Celery, JWT Auth) ubicado en `projecto/backend/`.
+* **Diseño Institucional:** Paleta corporativa de la Ilustre Municipalidad de La Serena (carmesí `#850000`, degradados oscuros GovTech, dorado heráldico y tipografía Inter).
+* **Prototipo Autónomo:** Archivo `index.html` en este directorio, el cual funciona como réplica exacta interactiva 100% fiel al entorno Next.js para evaluación sin dependencias locales.
+
+---
+
+## 🖥️ 2. Módulos y Paneles Operacionales
+
+### 1. Panel Terreno (Cuadrilla Operativa)
+* **Tarjeta de Identidad de Cuadrilla:** Despliega el nombre del funcionario en terreno (ej: Rodrigo Morales), RUT, delegación territorial (ej: La Pampa), área operativa (DISERCO), metas trimestrales fijadas, bonos por felicitaciones (+10%) y penalizaciones por reclamos formales (-20%).
+* **Semáforo de Cumplimiento Trimestral Proporcional:**
+  * Algoritmo proporcional a 65 días hábiles (RN-007).
+  * Barra de progreso multi-stop con gradiente continuo: `0% Inicio`, `60% Mínimo`, `100% Meta Oficial` y `150% Tope Máx`.
+  * Pin interactivo indicador de avance real y cálculo de meta proporcional esperada hoy (66.7 tickets).
+  * Tarjetas de métricas: Tareas Validadas, Días Hábiles transcurridos, Bonos Vecinales y Penalizaciones.
+* **Requerimientos en Cuadrilla:** Bandeja de solicitudes asignadas con buscador en tiempo real, filtros por estado (`Todos`, `Pendiente`, `En proceso`, `Observado`, `Realizado`), etiquetas institucionales y botón para inspeccionar evidencias.
+* **Botón "+ Ingresar Requerimiento":** Abre el modal de captura rápida de requerimientos vecinales al Tubo de Trabajo.
+
+### 2. Panel Coordinación (Mesa de Dictamen & Supervisión General)
+* **Auditoría Check = 1:** Mesa de fiscalización centralizada para las 6 delegaciones comunales.
+* **Cola de Validación Fotográfica:** Listado filtrable de requerimientos finalizados por cuadrilla en espera de revisión visual.
+* **Modal de Mesa de Auditoría y Dictamen:**
+  * Cotejo simultáneo lado a lado: **1. Estado Inicial ('Antes')** vs **2. Evidencia de Término ('Después')** con código criptográfico inmutable (ej: `VER-8114-OK`).
+  * 4 alternativas de dictamen formal:
+    1. *Certificar & Aprobar Solicitud (Check = 1 / +1 Logro al Semáforo)*.
+    2. *Observar & Devolver a Cuadrilla*.
+    3. *Reasignar a Otra Delegación*.
+    4. *Cancelar Solicitud*.
+  * Campo de observaciones de auditoría obligatorias ante reparos.
+
+### 3. Panel Alcaldía (Mando Estratégico • 6 Delegaciones)
+* **Tablero General de Gestión y Metas Comunales:** Consolidado ejecutivo para la máxima autoridad comunal y jefaturas DIDECO.
+* **Diagnóstico Situacional Comunal:** Alerta temprana de requerimientos fuera de plazo que requieren acompañamiento o intervención inmediata.
+* **4 KPIs Comunales Estratégicos:** Promedio Comunal Ponderado, Tickets Validados Certificados, Pendientes en Terreno y Tickets Fuera de Plazo (que bloquean el semáforo a 0%).
+* **Desglose Operativo por las 6 Delegaciones Territoriales:** Tabla comparativa en tiempo real entre:
+  * Delegación Centro
+  * Delegación Rural
+  * Delegación La Antena
+  * Delegación La Pampa
+  * Delegación Avenida del Mar
+  * Delegación Las Compañías
+
+### 4. Modales y Componentes de Soporte
+* **Modal Guía de Operación Municipal ("¿Cómo funciona?"):** Explica el flujo estandarizado en 4 pasos: *1. Ingreso Vecinal*, *2. Ejecución en Terreno*, *3. Certificación Check=1* y *4. Bitácora Inmutable en Caja Negra*.
+* **Modal Identificación Funcionaria / Acceso Oficial:** Login institucional con RUT o correo `@laserena.cl` y contraseña.
+* **Selector Rápido de Funcionarios Demo:** Permite alternar instantáneamente entre cuadrillas de La Pampa, Centro, Las Compañías, La Antena y Rural para comprobar la reactividad del semáforo.
+
+---
+
+## 🚀 3. Instrucciones de Ejecución
+
+### Opción A: Abrir el Prototipo Autónomo (Inmediato)
+Haga doble clic en:
+```
+Primera_Entrega/06_PROTOTIPO_TEMPLATES_GIT/abrir_prototipo.bat
+```
+El script detectará si el servidor Next.js está en línea en `http://localhost:3000` y lo abrirá directamente; en caso contrario, abrirá de forma transparente el archivo `index.html` en Google Chrome o Microsoft Edge con total interactividad.
+
+### Opción B: Iniciar la Plataforma Completa (Next.js + Django REST)
+Si desea levantar ambos servidores en su estación de trabajo:
+1. Abra una terminal en `projecto/backend` y ejecute:
+   ```bash
+   .\venv\Scripts\python.exe manage.py runserver 127.0.0.1:8000
+   ```
+2. Abra otra terminal en `projecto/la-serena-app` y ejecute:
+   ```bash
+   npm run dev
+   ```
+3. Ingrese a: `http://localhost:3000`
+
+---
+
+## 🖼️ 4. Capturas Oficiales de la Plataforma Incluidas
+Todas las capturas de alta definición de la aplicación real se encuentran disponibles en este directorio:
+* `screenshot_dashboard_kpi.png`: Panel Terreno y Semáforo Proporcional.
+* `screenshot_coordinacion_supervisor.png`: Mesa de Dictamen y Supervisión General.
+* `screenshot_alcaldia_mando_estrategico.png`: Mando Estratégico y las 6 Delegaciones.
+* `screenshot_nuevo_requerimiento.png`: Formulario de Ingreso al Tubo de Trabajo.
+* `screenshot_auditoria_dictamen_modal.png`: Mesa de Auditoría y Cotejo Antes/Después.
+* `screenshot_guia_operacion_municipal.png`: Guía Operativa en 4 Pasos.

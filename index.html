@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Territorial • Ilustre Municipalidad de La Serena</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            crimson: {
+              700: '#850000',
+              800: '#680000',
+              900: '#4A0000',
+              950: '#2E0000',
+            },
+            muni: {
+              navy: '#0B1120',
+              cardDark: '#070D1E',
+              gold: '#D97706',
+              goldLight: '#F59E0B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #F1F5F9;
+      color: #0F172A;
+      -webkit-font-smoothing: antialiased;
+    }
+    .glass-header {
+      background: linear-gradient(135deg, #4A0000 0%, #680000 50%, #850000 100%);
+      border-bottom: 2px solid rgba(217, 119, 6, 0.4);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+    }
+    .muni-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.25rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
+    }
+    .progress-gradient {
+      background: linear-gradient(90deg, #ef4444 0%, #f59e0b 40%, #10b981 70%, #059669 100%);
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100 text-slate-900">
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- TOP STATUS BAR INSTITUCIONAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 flex flex-wrap justify-between items-center border-b border-red-950/40 font-medium">
+    <div class="flex items-center gap-2">
+      <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+      <span id="live-datetime">Viernes, 11 de Septiembre de 2026 • 07:00:00 • La Serena • Chile</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- Status Badge -->
+      <div class="flex items-center gap-1.5 bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Django REST & PostgreSQL</span>
+      </div>
+
+      <!-- Theme Button -->
+      <button class="flex items-center gap-1 text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-0.5 rounded-md border border-slate-700 transition">
+        <i data-lucide="laptop" class="w-3 h-3 text-amber-400"></i>
+        <span>Auto</span>
+      </button>
+
+      <!-- Guía Button -->
+      <button onclick="openModal('modal-guia')" class="flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-white bg-red-950/80 hover:bg-red-900 px-2.5 py-0.5 rounded-full border border-amber-500/40 shadow-xs cursor-pointer transition">
+        <i data-lucide="help-circle" class="w-3 h-3 text-amber-400"></i>
+        <span>¿Cómo funciona?</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- HEADER INSTITUCIONAL CARMESÍ -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <header class="glass-header text-white sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Delegaciones -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white rounded-xl shadow-md p-1 flex items-center justify-center border border-amber-400/60 overflow-hidden">
+          <img src="logo-laserena.png" alt="Escudo La Serena" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='screenshot_dashboard_kpi.png';">
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base sm:text-lg font-black tracking-tight text-white drop-shadow-xs">LA SERENA</span>
+            <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">6 DELEGACIONES</span>
+          </div>
+          <p class="text-[11px] text-red-100 font-medium tracking-wide">Ilustre Municipalidad • Coordinación Territorial</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Terreno / Coordinación / Alcaldía) -->
+      <nav class="flex items-center gap-1.5 sm:gap-2 bg-red-950/50 p-1 rounded-2xl border border-red-800/40 backdrop-blur-xs">
+        <button id="tab-btn-terreno" onclick="switchTab('terreno')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900">
+          <i data-lucide="hard-hat" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Terreno</div>
+            <div class="text-[9px] font-normal opacity-80">Cuadrilla Operativa</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-coordinacion" onclick="switchTab('coordinacion')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Coordinación</div>
+            <div class="text-[9px] font-normal opacity-80">Auditoría Check=1</div>
+          </div>
+        </button>
+
+        <button id="tab-btn-alcaldia" onclick="switchTab('alcaldia')" class="tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60">
+          <i data-lucide="building-2" class="w-4 h-4"></i>
+          <div class="text-left leading-tight">
+            <div>Alcaldía</div>
+            <div class="text-[9px] font-normal opacity-80">Mando Estratégico</div>
+          </div>
+        </button>
+      </nav>
+
+      <!-- User Selector & Actions -->
+      <div class="flex items-center gap-2.5">
+        <!-- Badge Pending Checks (visible en Coordinacion o Terreno) -->
+        <div class="hidden md:flex items-center gap-1.5 bg-amber-400/90 text-slate-950 px-2.5 py-1 rounded-xl text-xs font-black shadow-xs">
+          <i data-lucide="bell" class="w-3.5 h-3.5 text-red-900"></i>
+          <span>1 Check por Validar</span>
+        </div>
+
+        <!-- Funcionario Selector -->
+        <div class="relative">
+          <button onclick="toggleFuncSelector()" class="flex items-center gap-2 bg-red-950/70 hover:bg-red-900/80 px-3 py-1.5 rounded-2xl border border-red-700/50 text-xs font-bold text-white transition">
+            <div class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs">R</div>
+            <div class="text-left leading-tight">
+              <div id="selected-func-name">Rodrigo Morales</div>
+              <div id="selected-func-del" class="text-[10px] text-amber-300 font-normal">La Pampa</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-red-300"></i>
+          </button>
+          
+          <div id="func-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white text-slate-900 rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs">
+            <div class="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cambiar Funcionario (Demo)</div>
+            <button onclick="selectFuncionario('Rodrigo Morales', 'La Pampa', 'DISERCO', '14.238.912-4', 120, 11, 66.7)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between font-semibold">
+              <span>Rodrigo Morales</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">La Pampa</span>
+            </button>
+            <button onclick="selectFuncionario('Camila Santander', 'Centro', 'Gestión Social (DIDECO)', '17.320.450-4', 60, 45, 35.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Camila Santander</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Centro</span>
+            </button>
+            <button onclick="selectFuncionario('Hernán Cortés', 'Las Compañías', 'Seguridad', '13.980.112-9', 55, 80, 42.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Hernán Cortés</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Las Compañías</span>
+            </button>
+            <button onclick="selectFuncionario('Patricia Valenzuela', 'La Antena', 'Organizaciones Comunitarias', '16.740.231-1', 40, 60, 28.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Patricia Valenzuela</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">La Antena</span>
+            </button>
+            <button onclick="selectFuncionario('Esteban Barraza', 'Rural', 'DISERCO', '18.210.998-3', 70, 95, 52.0)" class="w-full text-left px-3 py-1.5 hover:bg-slate-100 flex items-center justify-between">
+              <span>Esteban Barraza</span> <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">Rural</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Acceso Oficial Button -->
+        <button onclick="openModal('modal-login')" class="flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 px-3.5 py-2 rounded-2xl text-xs font-black shadow-md hover:scale-105 transition cursor-pointer">
+          <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          <span>Acceso Oficial</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MAIN CONTAINER -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 1: PANEL TERRENO (CUADRILLA OPERATIVA) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-terreno" class="space-y-6">
+      
+      <!-- Grid Superior: Tarjeta Funcionario + Semáforo Gauge -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Tarjeta Cuadrilla Activa (Navy Blue Sólido) -->
+        <div class="lg:col-span-4 bg-[#070D1E] text-white p-6 rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide">CUADRILLA ACTIVA</span>
+              <span class="text-[11px] text-slate-400 font-mono" id="card-rut">RUT: 14.238.912-4</span>
+              <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full" id="card-area">DISERCO</span>
+            </div>
+
+            <div class="flex items-center gap-3 mb-2">
+              <div class="p-2 bg-amber-400/20 rounded-xl text-amber-400">
+                <i data-lucide="hard-hat" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-black text-white leading-tight" id="card-name">Rodrigo Morales</h2>
+                <p class="text-xs text-amber-300 font-medium flex items-center gap-1 mt-0.5">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i>
+                  <span>Delegación Territorial: <b id="card-del">La Pampa</b></span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Stats Boxes -->
+            <div class="grid grid-cols-3 gap-2 mt-6">
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-slate-400 font-bold uppercase">Meta Trimestral</div>
+                <div class="text-lg font-black text-white mt-0.5" id="card-meta">120</div>
+                <div class="text-[9px] text-slate-500">tickets fijados</div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-emerald-400 font-bold uppercase">Felicitaciones</div>
+                <div class="text-lg font-black text-emerald-400 mt-0.5">+1</div>
+                <div class="text-[9px] text-emerald-500/80">+10% bono</div>
+              </div>
+
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl text-center">
+                <div class="text-[10px] text-rose-400 font-bold uppercase">Reclamos</div>
+                <div class="text-lg font-black text-rose-400 mt-0.5">-0</div>
+                <div class="text-[9px] text-rose-500/80">-0% pen.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Ingresar Requerimiento -->
+          <div class="mt-8 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-3">
+            <span class="text-xs text-slate-400">¿Nuevo requerimiento vecinal?</span>
+            <button onclick="openModal('modal-nuevo-ticket')" class="flex items-center gap-1.5 bg-gradient-to-r from-red-800 to-red-700 hover:from-red-700 hover:to-red-600 text-white text-xs font-black px-4 py-2.5 rounded-2xl shadow-lg hover:scale-105 transition cursor-pointer border border-red-600/50">
+              <i data-lucide="plus-circle" class="w-4 h-4 text-amber-400"></i>
+              <span>Ingresar Requerimiento</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Semáforo Gauge Proporcional (Muni Card Blanca) -->
+        <div class="lg:col-span-8 muni-card p-6 flex flex-col justify-between">
+          <div>
+            <!-- Header Semáforo -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1 bg-red-50 text-red-900 border border-red-200 px-3 py-1 rounded-full text-xs font-extrabold uppercase">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+                  <span>MEDIDOR DE RENDIMIENTO PROPORCIONAL</span>
+                </span>
+                <span class="text-xs text-slate-500 font-semibold">Día 35 de 63 Hábiles</span>
+              </div>
+
+              <div class="flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black">
+                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                <span>ALERTA DE RENDIMIENTO (&lt;60%)</span>
+              </div>
+            </div>
+
+            <h3 class="text-xl font-black text-slate-900 tracking-tight mb-4">Semáforo de Cumplimiento Trimestral</h3>
+
+            <!-- Rendimiento Calculado al Día -->
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 mb-5">
+              <div class="flex flex-wrap items-end justify-between gap-4 mb-3">
+                <div>
+                  <div class="text-xs font-bold text-slate-500 uppercase tracking-wide">RENDIMIENTO CALCULADO AL DÍA</div>
+                  <div class="flex items-baseline gap-2 mt-1">
+                    <span class="text-4xl font-black text-slate-900" id="gauge-pct">11%</span>
+                    <span class="text-xs font-semibold text-slate-500">Avance real acumulado</span>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <div class="text-xs font-bold text-slate-500">Meta Proporcional Esperada Hoy:</div>
+                  <div class="text-2xl font-black text-red-700" id="gauge-esperada">66.7 tickets</div>
+                </div>
+              </div>
+
+              <!-- Multi-Stop Gradient Progress Bar -->
+              <div class="relative pt-6 pb-2">
+                <!-- Pin Indicator -->
+                <div class="absolute top-0 left-[11%] -translate-x-1/2 flex flex-col items-center pointer-events-none transition-all duration-500" id="gauge-pin">
+                  <span class="bg-red-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md">11%</span>
+                  <div class="w-0.5 h-2 bg-red-800"></div>
+                </div>
+
+                <!-- Track Bar -->
+                <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden p-0.5">
+                  <div class="h-full rounded-full progress-gradient w-[11%] transition-all duration-500" id="gauge-bar"></div>
+                </div>
+
+                <!-- Labels debajo de la barra -->
+                <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2">
+                  <span>0% <span class="font-normal text-[10px] text-slate-400 block">Inicio</span></span>
+                  <span class="text-amber-600">60% <span class="font-normal text-[10px] text-slate-400 block">Mínimo</span></span>
+                  <span class="text-emerald-700 flex items-center gap-0.5"><i data-lucide="star" class="w-2.5 h-2.5 fill-emerald-600"></i> 100% <span class="font-normal text-[10px] text-slate-400 block">Meta Oficial</span></span>
+                  <span class="text-slate-700">150% <span class="font-normal text-[10px] text-slate-400 block">Tope Máx</span></span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-600">
+                <div>
+                  Base: <b>1%</b> • Bono Vecinal: <b class="text-emerald-700">+10%</b> • Penalización: <b class="text-rose-700">-0%</b>
+                </div>
+                <div class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-black text-slate-800">
+                  Resultado: 11% (Tope 150%)
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 4 Métricas Inferiores -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Validados</span>
+                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-900 mt-1">1 <span class="text-xs font-normal text-slate-500">/ 66.7 esp.</span></div>
+              <div class="text-[10px] text-slate-500">Tareas Aprobadas</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Días Hábiles</span>
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-blue-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-900 mt-1">Día 35 <span class="text-xs font-normal text-slate-500">de 63</span></div>
+              <div class="text-[10px] text-slate-500">Base 65 - Deducibles</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Felicitaciones</span>
+                <i data-lucide="award" class="w-3.5 h-3.5 text-emerald-600"></i>
+              </div>
+              <div class="text-lg font-black text-emerald-700 mt-1">+10%</div>
+              <div class="text-[10px] text-slate-500">+10% por carta vecinal</div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+              <div class="flex items-center justify-between text-slate-500 text-[10px] font-bold uppercase">
+                <span>Reclamos</span>
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-rose-600"></i>
+              </div>
+              <div class="text-lg font-black text-slate-700 mt-1">-0%</div>
+              <div class="text-[10px] text-slate-500">-20% por queja formal</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Requerimientos en Cuadrilla (Listado de Tickets) -->
+      <div class="muni-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-lg font-black text-slate-900">Requerimientos en Cuadrilla</h3>
+              <span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-0.5 rounded-full">2 solicitudes</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Gestione los tickets asignados a su cuadrilla, inicie faenas y adjunte de 1 a 4 fotos de respaldo tras concluir.</p>
+          </div>
+
+          <!-- Filtros y Búsqueda -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative">
+              <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" placeholder="Buscar RUT, vecino, código..." class="pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-red-800 focus:outline-none w-56">
+            </div>
+
+            <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+              <button class="px-3 py-1 bg-white text-slate-900 rounded-lg shadow-xs">Todos</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Pendiente</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">En proceso</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Observado</button>
+              <button class="px-3 py-1 text-slate-600 hover:text-slate-900">Realizado</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de Tickets -->
+        <div class="space-y-3">
+          <!-- Ticket 1 (En espera de validación) -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4">
+            <div class="space-y-1.5 max-w-2xl">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
+                <span class="font-extrabold text-slate-900 text-sm">Carlos Zepeda</span>
+                <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
+                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="check" class="w-3 h-3"></i> Realizado
+                </span>
+                <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="hourglass" class="w-3 h-3"></i> En Espera de Validación
+                </span>
+              </div>
+              <p class="text-xs text-slate-700 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
+              <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Av. Cuatro Esquinas 850, La Pampa</span>
+                <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Compromiso: 16-09-2026</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openModal('modal-audit')" class="bg-red-900 hover:bg-red-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                <span>Ver Evidencias</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ticket 2 (Aprobado Check=1) -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 hover:border-slate-300 transition-all shadow-xs flex flex-wrap items-center justify-between gap-4 opacity-90">
+            <div class="space-y-1.5 max-w-2xl">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="bg-red-50 text-red-900 text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-001</span>
+                <span class="font-extrabold text-slate-900 text-sm">María González</span>
+                <span class="text-xs text-slate-400 font-mono">12.345.678-9</span>
+                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+                <span class="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <i data-lucide="check-circle-2" class="w-3 h-3"></i> Check = 1 Aprobado (+1 Logro)
+                </span>
+              </div>
+              <p class="text-xs text-slate-700 font-medium">Retiro de escombros y despeje de vereda tras faena de canalización.</p>
+              <div class="flex items-center gap-4 text-[11px] text-slate-500">
+                <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Calle Los Perales 120, La Pampa</span>
+                <span class="flex items-center gap-1 text-emerald-700 font-bold"><i data-lucide="shield-check" class="w-3 h-3"></i> Dictamen Supervisor: Conforme</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i> Certificado
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 2: PANEL COORDINACIÓN (AUDITORÍA CHECK=1) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-coordinacion" class="space-y-6 hidden">
+      
+      <!-- Banner Coordinación -->
+      <div class="muni-card p-6 flex flex-wrap items-center justify-between gap-4 bg-white">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-red-800 text-white flex items-center justify-center shadow-md">
+            <i data-lucide="globe-2" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-red-800 uppercase tracking-wide">COORDINACIÓN GENERAL COMUNAL (6 DELEGACIONES)</span>
+              <span class="text-xs text-slate-500">Supervisor Territorial</span>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Mesa de Dictamen & Supervisión General</h2>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs">
+            <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-600"></i>
+            <span>Cola de Validación (1)</span>
+          </button>
+          <button class="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+            <span>Modificadores (5)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cola de Validación Fotográfica -->
+      <div class="muni-card p-6 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900">Cola de Validación Fotográfica (1 pendientes)</h3>
+              <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Validación Pendiente</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Supervise y valide evidencias fotográficas de todas las delegaciones comunales.</p>
+          </div>
+
+          <div>
+            <select class="text-xs font-bold bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 focus:outline-none">
+              <option>Todas las Delegaciones (Comunal)</option>
+              <option>Centro</option>
+              <option>Rural</option>
+              <option>La Antena</option>
+              <option>La Pampa</option>
+              <option>Avenida del Mar</option>
+              <option>Las Compañías</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ticket a auditar -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 transition shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div class="space-y-1.5 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-red-50 text-red-900 text-xs font-mono font-bold px-2.5 py-0.5 rounded-md border border-red-200">DIS-PAM-002</span>
+              <span class="font-black text-slate-900 text-sm">Carlos Zepeda</span>
+              <span class="text-xs text-slate-400 font-mono">9.876.543-2</span>
+              <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">La Pampa</span>
+              <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">DISERCO</span>
+            </div>
+            <p class="text-xs text-slate-800 font-medium">Poda de árbol con riesgo inminente de caída sobre cableado eléctrico.</p>
+            <div class="flex items-center gap-4 text-[11px] text-slate-500">
+              <span>Cuadrilla: <b>Rodrigo Morales</b></span>
+              <span>•</span>
+              <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-red-800"></i> Sector: Av. Cuatro Esquinas 850</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="openModal('modal-audit')" class="flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl transition cursor-pointer">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              <span>Ficha</span>
+            </button>
+            <button onclick="openModal('modal-audit')" class="flex items-center gap-1.5 bg-red-900 hover:bg-red-800 text-white text-xs font-black px-4 py-2 rounded-xl shadow-md transition cursor-pointer">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+              <span>Auditar Requerimiento</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ────────────────────────────────────────────────────────── -->
+    <!-- VISTA 3: PANEL ALCALDÍA (MANDO ESTRATÉGICO 6 DELEGACIONES) -->
+    <!-- ────────────────────────────────────────────────────────── -->
+    <div id="view-alcaldia" class="space-y-6 hidden">
+      
+      <!-- Banner Alcaldía -->
+      <div class="muni-card p-6 flex flex-wrap items-center justify-between gap-4 bg-white">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="bg-red-50 text-red-900 text-xs font-black px-2.5 py-0.5 rounded-md uppercase border border-red-200">ALCALDÍA • MANDO ESTRATÉGICO</span>
+            <span class="text-xs text-slate-500 font-semibold">• 6 Delegaciones</span>
+          </div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight mt-1">Tablero General de Gestión y Metas Comunales</h2>
+          <p class="text-xs text-slate-500 mt-1 max-w-3xl">Consolidado ejecutivo de respuesta vecinal, avance del ciclo trimestral de 65 días hábiles y supervisión territorial de La Serena.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-end sm:items-center gap-3">
+          <div class="bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-2xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-xl bg-rose-600 text-white font-black text-xs flex items-center justify-center">5%</span>
+            <div class="text-left leading-tight">
+              <div class="text-[11px] font-black text-rose-800">Alerta Crítica Comunal</div>
+              <div class="text-[9px] text-rose-600 uppercase font-bold">PROMEDIO COMUNAL</div>
+            </div>
+          </div>
+
+          <button onclick="window.print()" class="flex items-center gap-2 bg-red-950 hover:bg-red-900 text-white text-xs font-black px-4 py-2 rounded-2xl shadow-md transition cursor-pointer">
+            <i data-lucide="printer" class="w-4 h-4 text-amber-400"></i>
+            <span>Imprimir Ficha Ejecutiva (1 Hoja)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Diagnóstico Situacional Banner -->
+      <div class="bg-rose-50/70 border border-rose-200/80 rounded-2xl p-4 flex items-center gap-3 text-xs text-rose-900 font-medium">
+        <i data-lucide="activity" class="w-5 h-5 text-rose-600 shrink-0"></i>
+        <span><b>Diagnóstico Situacional Comunal:</b> Existen 3 requerimiento(s) fuera del plazo de compromiso que requieren atención prioritaria de jefaturas territoriales.</span>
+      </div>
+
+      <!-- 4 KPIs Comunales -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">PROMEDIO COMUNAL</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">5%</div>
+            <div class="text-xs text-emerald-700 font-bold mt-0.5">Ponderación global</div>
+          </div>
+          <div class="p-3 bg-red-50 text-red-800 rounded-2xl">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">TICKETS VALIDADOS</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">2</div>
+            <div class="text-xs text-emerald-700 font-bold mt-0.5">Check = 1 Certificados</div>
+          </div>
+          <div class="p-3 bg-emerald-50 text-emerald-700 rounded-2xl">
+            <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">PENDIENTES EN TERRENO</div>
+            <div class="text-3xl font-black text-slate-900 mt-1">3</div>
+            <div class="text-xs text-amber-700 font-bold mt-0.5">Cuadrillas operativas</div>
+          </div>
+          <div class="p-3 bg-amber-50 text-amber-700 rounded-2xl">
+            <i data-lucide="layers" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="muni-card p-5 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-slate-500 uppercase">FUERA DE PLAZO</div>
+            <div class="text-3xl font-black text-rose-600 mt-1">3</div>
+            <div class="text-xs text-rose-700 font-bold mt-0.5">Bloquean semáforo a 0%</div>
+          </div>
+          <div class="p-3 bg-rose-50 text-rose-700 rounded-2xl">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desglose por las 6 Delegaciones -->
+      <div class="muni-card p-6 space-y-4">
+        <div>
+          <h3 class="text-base font-black text-slate-900">Desglose Operativo por Delegación Territorial (La Serena)</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Evaluación comparativa de carga de trabajo, cumplimiento de compromisos y cuadrillas en terreno.</p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase">
+                <th class="py-3 px-3">DELEGACIÓN</th>
+                <th class="py-3 px-3">CUADRILLAS</th>
+                <th class="py-3 px-3">VALIDADOS (CHECK=1)</th>
+                <th class="py-3 px-3">PENDIENTES</th>
+                <th class="py-3 px-3">VENCIDOS</th>
+                <th class="py-3 px-3 text-right">RENDIMIENTO PROMEDIO</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Centro
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">1</td>
+                <td class="py-3 px-3 text-rose-700 font-bold flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i> 1</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">10%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Rural
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> La Antena
+                </td>
+                <td class="py-3 px-3">0 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> La Pampa
+                </td>
+                <td class="py-3 px-3">2 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">1</td>
+                <td class="py-3 px-3">2</td>
+                <td class="py-3 px-3 text-rose-700 font-bold flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i> 2</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">6%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Avenida del Mar
+                </td>
+                <td class="py-3 px-3">0 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">0</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-slate-500">0%</td>
+              </tr>
+
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-3 font-bold text-slate-900 flex items-center gap-2">
+                  <i data-lucide="building" class="w-4 h-4 text-red-800"></i> Las Compañías
+                </td>
+                <td class="py-3 px-3">1 cuadrilla(s)</td>
+                <td class="py-3 px-3 font-bold text-emerald-700">1</td>
+                <td class="py-3 px-3">0</td>
+                <td class="py-3 px-3 text-slate-500">0</td>
+                <td class="py-3 px-3 text-right font-black text-rose-700">1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: NUEVO REQUERIMIENTO VECINAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-nuevo-ticket" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-red-800 uppercase">INGRESO A TUBO DE TRABAJO</div>
+            <h3 class="text-base font-black text-slate-900">Nuevo Requerimiento Vecinal</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-nuevo-ticket')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">RUT SOLICITANTE / VECINO *</label>
+          <input type="text" value="12.345.678-9" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">NOMBRE COMPLETO DEL VECINO *</label>
+          <input type="text" value="Juan Pérez Morales" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">TELÉFONO DE CONTACTO</label>
+          <input type="text" value="+56 9 8765 4321" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DIRECCIÓN / SECTOR DE LA SERENA *</label>
+          <input type="text" value="Av. Cuatro Esquinas 850, La Pampa" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DELEGACIÓN TERRITORIAL *</label>
+          <select class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+            <option selected>La Pampa</option>
+            <option>Centro</option>
+            <option>Rural</option>
+            <option>La Antena</option>
+            <option>Avenida del Mar</option>
+            <option>Las Compañías</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">PILAR OPERATIVO *</label>
+          <select class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+            <option selected>DISERCO</option>
+            <option>Gestión Social (DIDECO)</option>
+            <option>Seguridad</option>
+            <option>Organizaciones Comunitarias</option>
+          </select>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">FECHA COMPROMISO DE RESOLUCIÓN</label>
+          <input type="date" value="2026-09-18" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold">
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-bold text-slate-700 uppercase text-[10px] mb-1">DESCRIPCIÓN DETALLADA DEL REQUERIMIENTO *</label>
+          <textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">Despeje y poda preventiva de rama de gran porte que amenaza tendido eléctrico.</textarea>
+        </div>
+      </div>
+
+      <!-- Evidencia Fotográfica Inicial Dropzone -->
+      <div class="border-2 border-dashed border-red-800/40 rounded-2xl p-4 text-center bg-red-50/40 space-y-2">
+        <div class="flex items-center justify-between text-xs font-bold">
+          <span class="flex items-center gap-1.5 text-red-900">
+            <i data-lucide="camera" class="w-4 h-4 text-red-800"></i>
+            <span>EVIDENCIA FOTOGRÁFICA INICIAL (ANTES) *</span>
+          </span>
+          <span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-black">1 / 4 fotos (Mínimo 1)</span>
+        </div>
+
+        <div class="p-4 flex flex-col items-center justify-center">
+          <div class="w-10 h-10 rounded-full bg-red-100 text-red-800 flex items-center justify-center mb-1">
+            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+          </div>
+          <div class="text-xs font-bold text-slate-700">Foto 'Antes' adjuntada con sello SHA-256</div>
+          <div class="text-[10px] text-slate-500">PNG, JPG, WEBP • Hasta 12 MB c/u</div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+        <button onclick="closeModal('modal-nuevo-ticket')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Cancelar</button>
+        <button onclick="alert('¡Requerimiento ingresado exitosamente al Tubo de Trabajo de La Serena!'); closeModal('modal-nuevo-ticket');" class="px-5 py-2.5 rounded-xl text-xs font-black bg-red-900 hover:bg-red-800 text-white shadow-md transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Ingresar Solicitud a Terreno</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: AUDITORÍA & DICTAMEN SUPERVISOR (CHECK = 1) -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-audit" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-black text-red-800 uppercase">MESA DE AUDITORÍA & DICTAMEN</span>
+              <span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">#DIS-PAM-002</span>
+            </div>
+            <h3 class="text-base font-black text-slate-900">Inspección y Resolución de Requerimiento</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-audit')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Resumen Ficha -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Vecino / Solicitante</div>
+          <div class="font-extrabold text-slate-900">Carlos Zepeda</div>
+          <div class="text-slate-500 font-mono text-[11px]">9.876.543-2</div>
+        </div>
+
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Ubicación y Sector</div>
+          <div class="font-extrabold text-slate-900">Av. Cuatro Esquinas 850</div>
+          <div class="text-slate-500 text-[11px]">La Pampa • DISERCO</div>
+        </div>
+
+        <div>
+          <div class="text-[10px] text-slate-400 font-bold uppercase">Funcionario en Terreno</div>
+          <div class="font-extrabold text-slate-900">Rodrigo Morales</div>
+          <div class="text-emerald-700 font-bold text-[11px]">Estado: Realizado</div>
+        </div>
+      </div>
+
+      <!-- Fotos Antes vs Después -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-black text-slate-700">
+          <span class="flex items-center gap-1.5"><i data-lucide="camera" class="w-4 h-4 text-red-800"></i> AUDITORÍA FOTOGRÁFICA DE TERRENO</span>
+          <span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Código: VER-8114-OK</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Foto Antes -->
+          <div class="border border-slate-200 rounded-2xl p-3 bg-slate-50">
+            <div class="text-[11px] font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span>1. Estado Inicial (Antes) • 1 foto(s)</span>
+              <span class="text-[10px] text-slate-400">08:30 hrs</span>
+            </div>
+            <div class="h-44 rounded-xl overflow-hidden bg-slate-200 flex items-center justify-center border border-slate-300 relative group">
+              <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80" alt="Foto Antes" class="w-full h-full object-cover">
+              <span class="absolute bottom-2 left-2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded">Antes de Faena</span>
+            </div>
+          </div>
+
+          <!-- Foto Después -->
+          <div class="border border-slate-200 rounded-2xl p-3 bg-slate-50">
+            <div class="text-[11px] font-bold text-slate-700 mb-2 flex items-center justify-between">
+              <span>2. Evidencia de Término (Después) • 1 foto(s)</span>
+              <span class="text-[10px] text-emerald-700 font-bold">11:45 hrs</span>
+            </div>
+            <div class="h-44 rounded-xl overflow-hidden bg-slate-200 flex items-center justify-center border border-slate-300 relative group">
+              <img src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&auto=format&fit=crop&q=80" alt="Foto Después" class="w-full h-full object-cover">
+              <span class="absolute bottom-2 left-2 bg-emerald-700 text-white text-[10px] font-bold px-2 py-0.5 rounded">Faena Concluida</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dictamen Opciones -->
+      <div class="space-y-2 pt-2">
+        <label class="block text-xs font-black text-slate-900 uppercase tracking-wide">RESOLUCIÓN Y DICTAMEN DEL REQUERIMIENTO</label>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <label class="border-2 border-emerald-500 bg-emerald-50/60 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" checked class="mt-0.5 text-emerald-600 focus:ring-emerald-500">
+            <div>
+              <div class="font-black text-emerald-950">1. Certificar & Aprobar Solicitud</div>
+              <div class="text-[11px] text-emerald-800">Validar calidad del trabajo y registrar cumplimiento de la cuadrilla (+1 Logro).</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">2. Observar & Devolver a Cuadrilla</div>
+              <div class="text-[11px] text-slate-500">Rechazar evidencia y enviar instrucción para que la cuadrilla corrija la labor o foto.</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">3. Reasignar a Otra Delegación</div>
+              <div class="text-[11px] text-slate-500">Derivar el ticket a otra de las 6 delegaciones territoriales por jurisdicción.</div>
+            </div>
+          </label>
+
+          <label class="border border-slate-200 hover:border-slate-300 p-3 rounded-2xl flex items-start gap-2.5 cursor-pointer">
+            <input type="radio" name="dictamen" class="mt-0.5 text-red-800">
+            <div>
+              <div class="font-black text-slate-900">4. Cancelar Solicitud</div>
+              <div class="text-[11px] text-slate-500">Anular requerimiento por duplicidad, no pertinencia o resolución externa.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Observaciones -->
+      <div>
+        <label class="block text-[11px] font-bold text-slate-600 mb-1">Observaciones de Auditoría (Opcional):</label>
+        <textarea rows="2" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none" placeholder="Faena validada en conformidad con estándares municipales..."></textarea>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-audit')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Cerrar sin Cambios</button>
+        <button onclick="alert('¡Dictamen registrado exitosamente! Requerimiento certificado con Check=1.'); closeModal('modal-audit');" class="px-6 py-2.5 rounded-xl text-xs font-black bg-emerald-700 hover:bg-emerald-600 text-white shadow-md transition flex items-center gap-1.5 cursor-pointer">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>✓ Aprobar Check = 1</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: GUÍA VISUAL "¿CÓMO FUNCIONA?" -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-guia" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-5 border border-slate-100 my-8">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-red-50 text-red-800 flex items-center justify-center">
+            <i data-lucide="help-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-red-800 uppercase">GUÍA DE OPERACIÓN MUNICIPAL</div>
+            <h3 class="text-base font-black text-slate-900">¿Cómo funciona la Plataforma?</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-guia')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-bold border-b border-slate-200 pb-2">
+        <span class="text-red-800 border-b-2 border-red-800 pb-2 flex items-center gap-1"><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i> 1. Flujo de Trabajo (4 Pasos)</span>
+        <span class="text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"><i data-lucide="gauge" class="w-3.5 h-3.5"></i> 2. Semáforo Dinámico Proporcional</span>
+        <span class="text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"><i data-lucide="shield" class="w-3.5 h-3.5"></i> 3. Roles y Permisos</span>
+      </div>
+
+      <p class="text-xs text-slate-600">La plataforma reemplaza el uso de planillas y garantiza la trazabilidad municipal en 4 pasos estandarizados:</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-red-100 text-red-800 flex items-center justify-center font-black text-xs">1</div>
+          <div class="font-black text-slate-900">Ingreso Vecinal</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">Se registra la solicitud del vecino con RUT, dirección, delegación, área y fotografía del estado inicial (Antes).</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-black text-xs">2</div>
+          <div class="font-black text-slate-900">Ejecución en Terreno</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">La cuadrilla inicia la labor y al terminar sube la fotografía de respaldo (Después) con sello digital inmutable.</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-black text-xs">3</div>
+          <div class="font-black text-slate-900">Certificación Check = 1</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">El Coordinador audita las fotos Antes/Después, aprueba la calidad o devuelve con observaciones para corregir.</div>
+        </div>
+
+        <div class="border border-slate-200 p-4 rounded-2xl bg-slate-50/60 space-y-1.5">
+          <div class="w-6 h-6 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center font-black text-xs">4</div>
+          <div class="font-black text-slate-900">Bitácora Inmutable</div>
+          <div class="text-slate-600 leading-relaxed text-[11px]">Cada acción queda firmada con hash SHA-256 en la Caja Negra para auditoría de Contraloría y DIDECO.</div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="closeModal('modal-guia')" class="px-5 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- MODAL: LOGIN / ACCESO OFICIAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 my-8">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-black text-amber-800 uppercase">IDENTIFICACIÓN FUNCIONARIA</div>
+            <h3 class="text-sm font-black text-slate-900">Acceso Oficial Plataforma SGR</h3>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-login')" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">RUT o Correo Institucional</label>
+          <input type="text" value="rmorales@laserena.cl" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Contraseña</label>
+          <input type="password" value="••••••••••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-red-800 focus:outline-none">
+        </div>
+
+        <button onclick="alert('¡Sesión iniciada correctamente en Django REST Backend!'); closeModal('modal-login');" class="w-full py-2.5 bg-gradient-to-r from-red-900 to-red-800 text-white font-black rounded-xl shadow-md text-xs transition hover:opacity-90">
+          Iniciar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- FOOTER INSTITUCIONAL -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-4 px-4 sm:px-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-black text-red-900">© 2026 Ilustre Municipalidad de La Serena • Coordinación Territorial</span>
+        <span class="bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">Caja Negra & SHA-256 Activo</span>
+      </div>
+      <div class="flex items-center gap-2 text-[11px] font-semibold text-slate-400">
+        <span>Centro</span> • <span>Rural</span> • <span>La Antena</span> • <span>La Pampa</span> • <span>Av. del Mar</span> • <span>Las Compañías</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- JAVASCRIPT NAVEGACIÓN Y REACTIVIDAD -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <script>
+    // Inicializar Iconos Lucide
+    lucide.createIcons();
+
+    // Tabs Switcher
+    function switchTab(tab) {
+      const views = ['terreno', 'coordinacion', 'alcaldia'];
+      views.forEach(v => {
+        const viewEl = document.getElementById('view-' + v);
+        const btnEl = document.getElementById('tab-btn-' + v);
+        if (v === tab) {
+          viewEl.classList.remove('hidden');
+          btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm bg-white text-red-900';
+        } else {
+          viewEl.classList.add('hidden');
+          btnEl.className = 'tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-red-200 hover:text-white hover:bg-red-900/60';
+        }
+      });
+      lucide.createIcons();
+    }
+
+    // Modal helpers
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      lucide.createIcons();
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // Funcionario Dropdown Toggle
+    function toggleFuncSelector() {
+      const d = document.getElementById('func-dropdown');
+      d.classList.toggle('hidden');
+    }
+
+    // Select Funcionario Demo
+    function selectFuncionario(nombre, delegacion, area, rut, meta, pct, esp) {
+      document.getElementById('selected-func-name').innerText = nombre;
+      document.getElementById('selected-func-del').innerText = delegacion;
+      document.getElementById('card-name').innerText = nombre;
+      document.getElementById('card-del').innerText = delegacion;
+      document.getElementById('card-area').innerText = area;
+      document.getElementById('card-rut').innerText = 'RUT: ' + rut;
+      document.getElementById('card-meta').innerText = meta;
+      document.getElementById('gauge-pct').innerText = pct + '%';
+      document.getElementById('gauge-esperada').innerText = esp + ' tickets';
+      document.getElementById('gauge-bar').style.width = Math.min(pct, 100) + '%';
+      document.getElementById('gauge-pin').style.left = Math.min(pct, 100) + '%';
+      document.getElementById('gauge-pin').querySelector('span').innerText = pct + '%';
+      document.getElementById('func-dropdown').classList.add('hidden');
+    }
+
+    // Close dropdown on outside click
+    window.addEventListener('click', function(e) {
+      const btn = document.querySelector('#selected-func-name');
+      const dd = document.getElementById('func-dropdown');
+      if (dd && !dd.contains(e.target) && !e.target.closest('button[onclick="toggleFuncSelector()"]')) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    // Update Live DateTime
+    function updateDateTime() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('es-CL', options);
+      const timeStr = now.toLocaleTimeString('es-CL');
+      const el = document.getElementById('live-datetime');
+      if (el) {
+        el.innerText = `${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)} • ${timeStr} • La Serena • Chile`;
+      }
+    }
+    setInterval(updateDateTime, 1000);
+  </script>
+
+</body>
+</html>

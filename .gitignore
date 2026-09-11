@@ -1,0 +1,7 @@
+# Git Ignore para Prototipo SGR
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+.vscode/
+.idea/
