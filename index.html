@@ -141,7 +141,7 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- TOP STATUS BAR INSTITUCIONAL -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <div id="top-status-bar" class="no-print bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 flex flex-wrap justify-between items-center border-b border-red-950/40 font-medium">
+  <div id="top-status-bar" class="no-print hidden md:flex bg-black/95 text-slate-300 text-xs py-1.5 px-4 sm:px-8 justify-between items-center border-b border-red-950/40 font-medium">
     <div class="flex items-center gap-2">
       <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
       <span id="live-datetime">Viernes, 11 de Septiembre de 2026 • 07:00:00 • La Serena • Chile</span>
@@ -1434,7 +1434,7 @@
   <!-- ══════════════════════════════════════════════════════════ -->
   <!-- MOBILE BOTTOM NAVIGATION BAR (Experiencia Teléfono Móvil) -->
   <!-- ══════════════════════════════════════════════════════════ -->
-  <nav id="mobile-bottom-nav" class="no-print fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 flex items-center justify-around py-1.5 px-2 shadow-2xl md:hidden safe-area-bottom">
+  <nav id="mobile-bottom-nav" class="no-print fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 grid grid-cols-4 w-full py-1.5 px-1 shadow-2xl md:hidden safe-area-bottom">
     <button onclick="switchTab('terreno')" id="mobile-tab-btn-terreno" class="mobile-tab-btn flex flex-col items-center justify-center flex-1 py-1 text-red-900 transition font-black scale-105">
       <i data-lucide="hard-hat" class="w-5 h-5 text-red-900"></i>
       <span class="text-[10px] mt-0.5">Terreno</span>
@@ -1721,11 +1721,37 @@
       const dateStr = now.toLocaleDateString('es-CL', options);
       const timeStr = now.toLocaleTimeString('es-CL');
       const el = document.getElementById('live-datetime');
-      if (el) {
-        el.innerText = `${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)} • ${timeStr} • La Serena • Chile`;
-      }
+      if (el) el.innerText = `${dateStr.charAt(0).toUpperCase() + dateStr.slice(1)} | ${timeStr}`;
     }
     setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Soporte para deep-links e inicialización por Hash
+    function handleHashRoute() {
+      const h = window.location.hash.toLowerCase();
+      if (h.includes('tubo')) {
+        switchTab('tubo');
+      } else if (h.includes('coordinacion') || h.includes('coord')) {
+        switchTab('coordinacion');
+      } else if (h.includes('alcaldia')) {
+        switchTab('alcaldia');
+      } else {
+        switchTab('terreno');
+      }
+      if (h.includes('audit')) {
+        openModal('modal-audit');
+      }
+      if (h.includes('sim')) {
+        toggleSimulador();
+        const s = document.getElementById('slider-adaptativo');
+        if (s) {
+          s.value = 35;
+          simularTareas(35);
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', handleHashRoute);
+    window.addEventListener('hashchange', handleHashRoute);
   </script>
 
 </body>
