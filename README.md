@@ -4,6 +4,9 @@
 **Asignatura:** Proyecto Integrador de Software  
 **Institución:** Ilustre Municipalidad de La Serena • 6 Delegaciones Territoriales  
 
+> 🌐 **DEMO EN VIVO (GitHub Pages):** [https://flyyyy98.github.io/prototipo-sgr-laserena/](https://flyyyy98.github.io/prototipo-sgr-laserena/)  
+> 🔗 **Repositorio Oficial:** [https://github.com/flyyyy98/prototipo-sgr-laserena](https://github.com/flyyyy98/prototipo-sgr-laserena)
+
 ---
 
 ## 📌 1. Arquitectura Oficial de la Plataforma
