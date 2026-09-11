@@ -95,13 +95,4 @@ Si desea levantar ambos servidores en su estación de trabajo:
    ```
 3. Ingrese a: `http://localhost:3000`
 
----
 
-## 🖼️ 4. Capturas Oficiales de la Plataforma Incluidas
-Todas las capturas de alta definición de la aplicación real se encuentran disponibles en este directorio:
-* `screenshot_dashboard_kpi.png`: Panel Terreno y Semáforo Proporcional.
-* `screenshot_coordinacion_supervisor.png`: Mesa de Dictamen y Supervisión General.
-* `screenshot_alcaldia_mando_estrategico.png`: Mando Estratégico y las 6 Delegaciones.
-* `screenshot_nuevo_requerimiento.png`: Formulario de Ingreso al Tubo de Trabajo.
-* `screenshot_auditoria_dictamen_modal.png`: Mesa de Auditoría y Cotejo Antes/Después.
-* `screenshot_guia_operacion_municipal.png`: Guía Operativa en 4 Pasos.
