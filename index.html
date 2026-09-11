@@ -334,7 +334,7 @@
                 <span class="text-xs text-slate-500 font-semibold">Día 35 de 63 Hábiles</span>
               </div>
 
-              <div class="flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black">
+              <div id="gauge-alert-badge" class="flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black">
                 <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                 <span>ALERTA DE RENDIMIENTO (&lt;60%)</span>
               </div>
@@ -359,17 +359,18 @@
                 </div>
               </div>
 
-              <!-- Multi-Stop Gradient Progress Bar -->
+              <!-- Multi-Stop Gradient Progress Bar (Barra Adaptativa Oficial) -->
               <div class="relative pt-6 pb-2">
                 <!-- Pin Indicator -->
-                <div class="absolute top-0 left-[11%] -translate-x-1/2 flex flex-col items-center pointer-events-none transition-all duration-500" id="gauge-pin">
+                <div class="absolute top-0 left-[7.3%] -translate-x-1/2 flex flex-col items-center pointer-events-none transition-all duration-500 z-20" id="gauge-pin">
                   <span class="bg-red-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md">11%</span>
                   <div class="w-0.5 h-2 bg-red-800"></div>
                 </div>
 
-                <!-- Track Bar -->
-                <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden p-0.5">
-                  <div class="h-full rounded-full progress-gradient w-[11%] transition-all duration-500" id="gauge-bar"></div>
+                <!-- Track Bar con Pista de Fondo Adaptativa -->
+                <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden p-0.5 relative shadow-inner border border-slate-300">
+                  <div class="absolute inset-0 opacity-20 bg-gradient-to-r from-red-500 via-amber-500 via-emerald-500 to-teal-500 rounded-full pointer-events-none"></div>
+                  <div class="h-full rounded-full progress-gradient w-[7.3%] transition-all duration-500 relative z-10 shadow-xs" id="gauge-bar"></div>
                 </div>
 
                 <!-- Labels debajo de la barra -->
@@ -382,11 +383,70 @@
               </div>
 
               <div class="mt-4 pt-3 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-600">
-                <div>
-                  Base: <b>1%</b> • Bono Vecinal: <b class="text-emerald-700">+10%</b> • Penalización: <b class="text-rose-700">-0%</b>
+                <div id="desglose-formula">
+                  Base: <b id="calc-base">1%</b> • Bono Vecinal: <b class="text-emerald-700">+10%</b> • Penalización: <b class="text-rose-700">-0%</b>
                 </div>
-                <div class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-black text-slate-800">
+                <div id="resultado-formula" class="bg-white border border-slate-200 px-2.5 py-1 rounded-lg font-black text-slate-800">
                   Resultado: 11% (Tope 150%)
+                </div>
+              </div>
+            </div>
+
+            <!-- ── BARRA ADAPTATIVA / SIMULADOR INTERACTIVO ── -->
+            <div class="mb-5 space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onclick="toggleSimulador()"
+                  class="no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-2xs"
+                  id="btn-toggle-sim"
+                >
+                  <i data-lucide="sliders" class="w-3.5 h-3.5 text-red-800"></i>
+                  <span id="btn-toggle-sim-text">¿Deseas simular impacto de tareas? (Barra Adaptativa)</span>
+                  <i data-lucide="chevron-down" id="sim-arrow" class="w-3.5 h-3.5 text-slate-500 transition-transform"></i>
+                </button>
+
+                <button
+                  id="btn-reset-sim"
+                  type="button"
+                  onclick="resetSimulacion()"
+                  class="hidden text-[11px] text-red-700 hover:text-red-900 font-bold underline cursor-pointer"
+                >
+                  Restablecer a valores reales
+                </button>
+              </div>
+
+              <!-- Contenedor Desplegable de la Barra Adaptativa -->
+              <div id="simulador-container" class="hidden p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black text-slate-800 flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-red-800"></i>
+                    Barra Adaptativa de Simulación en Terreno:
+                  </span>
+                  <span id="sim-badge" class="text-xs font-mono font-black text-red-800 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs">
+                    Sin simulación (+0 tareas)
+                  </span>
+                </div>
+
+                <!-- Input Range / Barra Deslizadora Adaptativa -->
+                <div class="relative pt-1 pb-1">
+                  <input
+                    type="range"
+                    id="slider-adaptativo"
+                    min="0"
+                    max="65"
+                    value="0"
+                    step="1"
+                    oninput="simularTareas(this.value)"
+                    class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-red-800 transition"
+                  >
+                </div>
+
+                <div class="flex justify-between text-[10px] text-slate-500 font-bold font-mono">
+                  <span>Hoy (+0)</span>
+                  <span>+15 tareas</span>
+                  <span>+35 tareas (Mínimo 60%)</span>
+                  <span>+65 tareas (Meta 100%)</span>
                 </div>
               </div>
             </div>
@@ -400,7 +460,7 @@
                 <span>Validados</span>
                 <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-600"></i>
               </div>
-              <div class="text-lg font-black text-slate-900 mt-1">1 <span class="text-xs font-normal text-slate-500">/ 66.7 esp.</span></div>
+              <div class="text-lg font-black text-slate-900 mt-1" id="stat-validados">1 <span class="text-xs font-normal text-slate-500">/ 66.7 esp.</span></div>
               <div class="text-[10px] text-slate-500">Tareas Aprobadas</div>
             </div>
 
@@ -1427,6 +1487,132 @@
       document.getElementById(id).classList.add('hidden');
     }
 
+    // ── BARRA ADAPTATIVA / SIMULADOR DE RENDIMIENTO EN TERRENO ──
+    let currentFuncionario = {
+      nombre: 'Rodrigo Morales',
+      delegacion: 'La Pampa',
+      area: 'DISERCO',
+      rut: '14.238.912-4',
+      meta: 120,
+      validadas: 1,
+      esperada: 66.7,
+      bono: 10,
+      penalizacion: 0
+    };
+    let simulatedTasks = 0;
+    let isSimulatorOpen = false;
+
+    function toggleSimulador() {
+      isSimulatorOpen = !isSimulatorOpen;
+      const container = document.getElementById('simulador-container');
+      const btn = document.getElementById('btn-toggle-sim');
+      const btnText = document.getElementById('btn-toggle-sim-text');
+      const arrow = document.getElementById('sim-arrow');
+
+      if (isSimulatorOpen) {
+        if (container) container.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+        if (btnText) btnText.innerText = 'Ocultar Simulador (Barra Adaptativa)';
+        if (btn) btn.className = 'no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-200 text-slate-900 border-slate-400 shadow-2xs';
+      } else {
+        if (container) container.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+        if (btnText) btnText.innerText = '¿Deseas simular impacto de tareas? (Barra Adaptativa)';
+        if (btn) btn.className = 'no-print px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300 shadow-2xs';
+        resetSimulacion();
+      }
+      lucide.createIcons();
+    }
+
+    function simularTareas(val) {
+      simulatedTasks = parseInt(val, 10) || 0;
+      const resetBtn = document.getElementById('btn-reset-sim');
+      const simBadge = document.getElementById('sim-badge');
+
+      if (simulatedTasks > 0) {
+        if (resetBtn) resetBtn.classList.remove('hidden');
+        if (simBadge) {
+          simBadge.innerText = `+${simulatedTasks} tareas simuladas`;
+          simBadge.className = 'text-xs font-mono font-black text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-xs';
+        }
+      } else {
+        if (resetBtn) resetBtn.classList.add('hidden');
+        if (simBadge) {
+          simBadge.innerText = 'Sin simulación (+0 tareas)';
+          simBadge.className = 'text-xs font-mono font-black text-red-800 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs';
+        }
+      }
+
+      const tareasTotales = currentFuncionario.validadas + simulatedTasks;
+      const pctBruto = currentFuncionario.esperada > 0 ? Math.round((tareasTotales / currentFuncionario.esperada) * 100) : 0;
+      const pctTope = Math.min(150, pctBruto);
+      let pctFinal = pctTope + currentFuncionario.bono - currentFuncionario.penalizacion;
+      pctFinal = Math.max(0, Math.min(150, pctFinal));
+
+      // Actualizar número en grande
+      const gaugePct = document.getElementById('gauge-pct');
+      if (gaugePct) gaugePct.innerText = pctFinal + '%';
+
+      // Actualizar desglose matemático
+      const calcBase = document.getElementById('calc-base');
+      if (calcBase) calcBase.innerText = pctTope + '%';
+      const resFormula = document.getElementById('resultado-formula');
+      if (resFormula) resFormula.innerText = `Resultado: ${pctFinal}% (Tope 150%)`;
+
+      // Ancho barra adaptativa (0% a 150% mapeado linealmente a 0% - 100% de la barra)
+      const barPercent = Math.min(100, Math.max(0, (pctFinal / 150) * 100));
+      const gaugeBar = document.getElementById('gauge-bar');
+      if (gaugeBar) gaugeBar.style.width = barPercent + '%';
+
+      // Pin indicador flotante
+      const gaugePin = document.getElementById('gauge-pin');
+      if (gaugePin) {
+        gaugePin.style.left = barPercent + '%';
+        const pinSpan = gaugePin.querySelector('span');
+        const pinDiv = gaugePin.querySelector('div');
+        if (pinSpan) {
+          pinSpan.innerText = pctFinal + '%';
+          if (pctFinal >= 100) {
+            pinSpan.className = 'bg-emerald-700 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-emerald-700';
+          } else if (pctFinal >= 60) {
+            pinSpan.className = 'bg-amber-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-amber-600';
+          } else {
+            pinSpan.className = 'bg-red-800 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-md';
+            if (pinDiv) pinDiv.className = 'w-0.5 h-2 bg-red-800';
+          }
+        }
+      }
+
+      // Badge Alerta Semáforo dinámico
+      const badgeAlerta = document.getElementById('gauge-alert-badge');
+      if (badgeAlerta) {
+        if (pctFinal >= 100) {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-full text-xs font-black';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span>CUMPLIMIENTO ÓPTIMO (≥100%)</span>';
+        } else if (pctFinal >= 60) {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-amber-50 text-amber-900 border border-amber-300 px-3 py-1 rounded-full text-xs font-black';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500"></span><span>PRECAUCIÓN / REGULAR (60% - 99%)</span>';
+        } else {
+          badgeAlerta.className = 'flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-black animate-pulse';
+          badgeAlerta.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span><span>ALERTA DE RENDIMIENTO (&lt;60%)</span>';
+        }
+      }
+
+      // Actualizar tarjeta Validados
+      const statVal = document.getElementById('stat-validados');
+      if (statVal) {
+        statVal.innerHTML = `${tareasTotales} <span class="text-xs font-normal text-slate-500">/ ${currentFuncionario.esperada} esp.</span>`;
+      }
+    }
+
+    function resetSimulacion() {
+      const slider = document.getElementById('slider-adaptativo');
+      if (slider) slider.value = 0;
+      simularTareas(0);
+    }
+
     // Funcionario Dropdown Toggle
     function toggleFuncSelector() {
       const d = document.getElementById('func-dropdown');
@@ -1435,6 +1621,14 @@
 
     // Select Funcionario Demo
     function selectFuncionario(nombre, delegacion, area, rut, meta, pct, esp) {
+      currentFuncionario.nombre = nombre;
+      currentFuncionario.delegacion = delegacion;
+      currentFuncionario.area = area;
+      currentFuncionario.rut = rut;
+      currentFuncionario.meta = meta;
+      currentFuncionario.esperada = esp;
+      currentFuncionario.validadas = Math.max(0, Math.round(((pct - 10) / 100) * esp));
+
       document.getElementById('selected-func-name').innerText = nombre;
       document.getElementById('selected-func-del').innerText = delegacion;
       document.getElementById('card-name').innerText = nombre;
@@ -1442,11 +1636,9 @@
       document.getElementById('card-area').innerText = area;
       document.getElementById('card-rut').innerText = 'RUT: ' + rut;
       document.getElementById('card-meta').innerText = meta;
-      document.getElementById('gauge-pct').innerText = pct + '%';
       document.getElementById('gauge-esperada').innerText = esp + ' tickets';
-      document.getElementById('gauge-bar').style.width = Math.min(pct, 100) + '%';
-      document.getElementById('gauge-pin').style.left = Math.min(pct, 100) + '%';
-      document.getElementById('gauge-pin').querySelector('span').innerText = pct + '%';
+
+      resetSimulacion();
       document.getElementById('func-dropdown').classList.add('hidden');
     }
 
