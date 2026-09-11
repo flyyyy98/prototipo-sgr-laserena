@@ -63,19 +63,30 @@ A diferencia de un template estático genérico, esta maqueta corresponde fielme
 ## 🚀 3. Instrucciones de Ejecución
 
 ### Opción A: Abrir el Prototipo Autónomo (Inmediato)
-Haga doble clic en:
+Haga doble clic en el archivo ubicado en esta misma carpeta:
+```bash
+abrir_prototipo.bat
 ```
-Primera_Entrega/06_PROTOTIPO_TEMPLATES_GIT/abrir_prototipo.bat
-```
-El script detectará si el servidor Next.js está en línea en `http://localhost:3000` y lo abrirá directamente; en caso contrario, abrirá de forma transparente el archivo `index.html` en Google Chrome o Microsoft Edge con total interactividad.
+(O simplemente abra `index.html` con cualquier navegador web).
 
-### Opción B: Iniciar la Plataforma Completa (Next.js + Django REST)
+### Opción B: Subir a GitHub y Publicar en GitHub Pages
+Esta carpeta ya está inicializada como repositorio Git local con la rama `main` y el commit inicial listo.
+Para vincularlo a tu cuenta de GitHub y publicarlo gratis en la web:
+1. Crea un repositorio en [GitHub.com](https://github.com/new) (ej: `prototipo-sgr-laserena`), déjalo público y sin inicializar (sin README ni .gitignore adicionales).
+2. Abre PowerShell o CMD en esta carpeta (`C:\Users\B1007\Desktop\Prototipo_SGR_LaSerena`) y ejecuta:
+   ```bash
+   git remote add origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+   git push -u origin main
+   ```
+3. En GitHub: ve a **Settings** -> **Pages** -> En *Branch* selecciona `main` / `(root)` y guarda. En 1 minuto tendrás la URL pública para enviar al profesor.
+
+### Opción C: Iniciar la Plataforma Completa (Next.js + Django REST)
 Si desea levantar ambos servidores en su estación de trabajo:
-1. Abra una terminal en `projecto/backend` y ejecute:
+1. Abra una terminal en `c:\Users\B1007\Documents\proyectoin\projecto\backend` y ejecute:
    ```bash
    .\venv\Scripts\python.exe manage.py runserver 127.0.0.1:8000
    ```
-2. Abra otra terminal en `projecto/la-serena-app` y ejecute:
+2. Abra otra terminal en `c:\Users\B1007\Documents\proyectoin\projecto\la-serena-app` y ejecute:
    ```bash
    npm run dev
    ```
