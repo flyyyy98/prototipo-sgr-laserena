@@ -1,11 +1,3 @@
-# 🚀 PLATAFORMA Y PROTOTIPO TERRITORIAL SGR - LA SERENA
-## Sistema de Gestión y Seguimiento de Resultados • Convenio INACAP 2026
-**Docente Evaluador:** Jorge Luis Alejandro Cortés Gallardo  
-**Asignatura:** Proyecto Integrador de Software  
-**Institución:** Ilustre Municipalidad de La Serena • 6 Delegaciones Territoriales  
-
-> 🌐 **DEMO EN VIVO (GitHub Pages):** [https://flyyyy98.github.io/prototipo-sgr-laserena/](https://flyyyy98.github.io/prototipo-sgr-laserena/)  
-> 🔗 **Repositorio Oficial:** [https://github.com/flyyyy98/prototipo-sgr-laserena](https://github.com/flyyyy98/prototipo-sgr-laserena)
 
 ---
 
